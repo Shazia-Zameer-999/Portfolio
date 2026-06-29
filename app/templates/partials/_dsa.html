@@ -1,0 +1,152 @@
+<section class="section dsa" id="dsa" aria-labelledby="dsa-heading">
+  <div class="container">
+
+    <div class="section__header reveal-up">
+      <span class="section__eyebrow">Problem solving</span>
+      <h2 class="section__title" id="dsa-heading">
+        I think in algorithms.
+      </h2>
+      <p class="section__subtitle">
+        DSA isn't something I study for interviews. It's how I approach every engineering problem.
+      </p>
+    </div>
+
+    <div class="dsa__grid">
+
+      {# ── Stats panel ───────────────────────────────────────── #}
+      <div class="dsa__stats reveal-up">
+        <div class="glass dsa__stats-card">
+          <h3 class="dsa__stats-title">LeetCode Stats</h3>
+
+          <div class="dsa__ring-container" aria-label="Problems solved breakdown">
+            {# Animated donut ring #}
+            <div class="dsa__ring" id="dsaRing" aria-hidden="true">
+              <svg viewBox="0 0 120 120" width="120" height="120">
+                <circle class="dsa__ring-bg" cx="60" cy="60" r="50"
+                        fill="none" stroke-width="12"/>
+                <circle class="dsa__ring-easy" cx="60" cy="60" r="50"
+                        fill="none" stroke-width="12"
+                        stroke-dasharray="{{ (data.dsa_stats.easy / data.dsa_stats.total_solved * 314.16) | round(2) }} 314.16"
+                        data-value="{{ data.dsa_stats.easy }}"/>
+                <circle class="dsa__ring-medium" cx="60" cy="60" r="50"
+                        fill="none" stroke-width="12"
+                        data-value="{{ data.dsa_stats.medium }}"/>
+                <circle class="dsa__ring-hard" cx="60" cy="60" r="50"
+                        fill="none" stroke-width="12"
+                        data-value="{{ data.dsa_stats.hard }}"/>
+                <text x="60" y="55" class="dsa__ring-total" text-anchor="middle">
+                  {{ data.dsa_stats.total_solved }}
+                </text>
+                <text x="60" y="72" class="dsa__ring-label" text-anchor="middle">solved</text>
+              </svg>
+            </div>
+
+            <div class="dsa__legend">
+              <div class="dsa__legend-item">
+                <span class="dsa__legend-dot dsa__legend-dot--easy"></span>
+                <span>Easy</span>
+                <strong>{{ data.dsa_stats.easy }}</strong>
+              </div>
+              <div class="dsa__legend-item">
+                <span class="dsa__legend-dot dsa__legend-dot--medium"></span>
+                <span>Medium</span>
+                <strong>{{ data.dsa_stats.medium }}</strong>
+              </div>
+              <div class="dsa__legend-item">
+                <span class="dsa__legend-dot dsa__legend-dot--hard"></span>
+                <span>Hard</span>
+                <strong>{{ data.dsa_stats.hard }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="dsa__streak">
+            <span class="dsa__streak-fire" aria-hidden="true">🔥</span>
+            <span>
+              <strong>{{ data.dsa_stats.streak }} day</strong> streak
+            </span>
+          </div>
+
+          <div class="dsa__platforms">
+            {% for platform in data.dsa_stats.platforms %}
+            <span class="tag">{{ platform }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {# ── Favourite topics ──────────────────────────────────── #}
+      <div class="dsa__topics reveal-up" data-delay="120">
+        <div class="glass dsa__topics-card">
+          <h3 class="dsa__topics-title">Strong areas</h3>
+          <ul class="dsa__topics-list" role="list">
+            {% for topic in data.dsa_stats.favorite_topics %}
+            <li class="dsa__topic-item">
+              <span class="dsa__topic-icon" aria-hidden="true">▸</span>
+              {{ topic }}
+            </li>
+            {% endfor %}
+          </ul>
+          <p class="dsa__topics-note">
+            Focus: pattern recognition over memorization.
+            Understanding <em>why</em> a solution works — not just that it does.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    {# ── Internship preparation ────────────────────────────── #}
+    <div class="internship reveal-up" data-delay="200">
+      <div class="section__header section__header--left">
+        <span class="section__eyebrow">Internship preparation</span>
+        <h2 class="section__title">
+          Preparing like it's my job.<br>Because it will be.
+        </h2>
+      </div>
+
+      <div class="internship__grid">
+
+        {# Programs being targeted #}
+        <div class="internship__programs">
+          <h3 class="internship__sub-title">Programs I'm targeting</h3>
+          <div class="internship__program-list">
+            {% for program in data.internship_prep.programs %}
+            <div class="glass internship__program">
+              <div class="internship__program-header">
+                <strong class="internship__program-name">{{ program.name }}</strong>
+                <span class="internship__status internship__status--{{ program.status }}">
+                  {{ program.status | capitalize }}
+                </span>
+              </div>
+              <p class="internship__program-notes">{{ program.notes }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        {# Prep areas #}
+        <div class="internship__areas">
+          <h3 class="internship__sub-title">What I'm working on</h3>
+          <ul class="internship__area-list" role="list">
+            {% for area in data.internship_prep.preparation_areas %}
+            <li class="internship__area-item">
+              <span class="internship__area-check" aria-hidden="true">✓</span>
+              {{ area }}
+            </li>
+            {% endfor %}
+          </ul>
+
+          <div class="internship__regions" aria-label="Target regions">
+            <span class="internship__regions-label">Target regions:</span>
+            {% for region in data.internship_prep.target_regions %}
+            <span class="tag">{{ region }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>

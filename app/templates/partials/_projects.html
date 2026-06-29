@@ -1,0 +1,145 @@
+<section class="section projects" id="projects" aria-labelledby="projects-heading">
+  <div class="container">
+
+    <div class="section__header reveal-up">
+      <span class="section__eyebrow">Featured work</span>
+      <h2 class="section__title" id="projects-heading">
+        Things I've built.
+      </h2>
+      <p class="section__subtitle">
+        Not side-project demos. Real systems with real constraints.
+      </p>
+    </div>
+
+    {# Featured projects — full-bleed cards #}
+    <div class="projects__list">
+      {% for project in data.projects if project.featured %}
+      <article class="project-card glass reveal-up" data-delay="{{ loop.index0 * 120 }}"
+               id="{{ project.id }}" aria-labelledby="proj-{{ project.id }}-title">
+
+        <div class="project-card__layout">
+
+          {# ── Visual side ───────────────────────────────────── #}
+          <div class="project-card__visual">
+            <div class="project-card__image-wrap">
+              <img
+                src="{{ project.image }}"
+                alt="Screenshot of {{ project.title }}"
+                class="project-card__image"
+                loading="lazy"
+                width="600" height="380"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              />
+              <div class="project-card__image-placeholder" style="display:none;" aria-hidden="true">
+                <span>{{ project.title[:2].upper() }}</span>
+              </div>
+            </div>
+            <div class="project-card__links">
+              {% if project.live_url %}
+              <a href="{{ project.live_url }}" target="_blank" rel="noopener"
+                 class="btn btn--ghost btn--sm" aria-label="Live demo of {{ project.title }}">
+                Live ↗
+              </a>
+              {% endif %}
+              <a href="{{ project.github_url }}" target="_blank" rel="noopener"
+                 class="btn btn--ghost btn--sm" aria-label="GitHub repository for {{ project.title }}">
+                GitHub ↗
+              </a>
+            </div>
+          </div>
+
+          {# ── Content side ──────────────────────────────────── #}
+          <div class="project-card__content">
+
+            <span class="project-card__number" aria-hidden="true">
+              0{{ loop.index }}
+            </span>
+
+            <h3 class="project-card__title" id="proj-{{ project.id }}-title">
+              {{ project.title }}
+            </h3>
+
+            <p class="project-card__tagline">{{ project.tagline }}</p>
+            <p class="project-card__desc">{{ project.description }}</p>
+
+            {# Tech stack #}
+            <div class="project-card__tech" aria-label="Technologies used">
+              {% for tech in project.tech %}
+              <span class="tag">{{ tech }}</span>
+              {% endfor %}
+            </div>
+
+            {# Expandable case study #}
+            <button class="project-card__expand"
+                    aria-expanded="false"
+                    aria-controls="case-{{ project.id }}"
+                    data-project="{{ project.id }}">
+              Read the engineering story
+              <svg class="project-card__expand-icon" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" width="16" height="16" stroke-width="2" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+
+            {# Hidden case study panel #}
+            <div class="project-card__case" id="case-{{ project.id }}" hidden>
+
+              <div class="case__section">
+                <h4 class="case__heading">Challenges</h4>
+                <ul class="case__list" role="list">
+                  {% for challenge in project.challenges %}
+                  <li>{{ challenge }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+
+              <div class="case__section">
+                <h4 class="case__heading">Engineering decisions</h4>
+                <ul class="case__list" role="list">
+                  {% for decision in project.decisions %}
+                  <li>{{ decision }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    {# Other projects — smaller grid #}
+    {% set other_projects = data.projects | rejectattr("featured") | list %}
+    {% if other_projects %}
+    <div class="projects__other reveal-up" data-delay="200">
+      <h3 class="projects__other-title">Other projects</h3>
+      <div class="projects__other-grid">
+        {% for project in other_projects %}
+        <article class="project-mini glass" aria-labelledby="mini-{{ project.id }}-title">
+          <h4 class="project-mini__title" id="mini-{{ project.id }}-title">
+            {{ project.title }}
+          </h4>
+          <p class="project-mini__desc">{{ project.tagline }}</p>
+          <div class="project-mini__tech">
+            {% for tech in project.tech[:3] %}
+            <span class="tag tag--sm">{{ tech }}</span>
+            {% endfor %}
+          </div>
+          <div class="project-mini__links">
+            {% if project.live_url %}
+            <a href="{{ project.live_url }}" target="_blank" rel="noopener"
+               aria-label="Live demo">↗ Live</a>
+            {% endif %}
+            <a href="{{ project.github_url }}" target="_blank" rel="noopener"
+               aria-label="GitHub">⌥ GitHub</a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>

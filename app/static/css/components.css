@@ -1,0 +1,375 @@
+/* ============================================================
+   COMPONENTS
+   Reusable UI primitives that appear across multiple sections:
+   .btn, .glass, .tag, .skills__bar, .project-card__expand-icon.
+   Each component is self-contained and doesn't depend on context.
+   ============================================================ */
+
+/* ── Glass card ─────────────────────────────────────────────
+   The core glassmorphism card. Used across:
+   timeline__content, skills__category, about__stat-card,
+   dsa__stats-card, dsa__topics-card, internship__program,
+   project-card, project-mini, achievement.
+   backdrop-filter creates the frosted glass depth effect. */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  transition:
+    background var(--duration-base) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart),
+    box-shadow var(--duration-slow) var(--ease-out-quart);
+}
+
+.glass:hover {
+  background: var(--color-bg-glass-hover);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-lg),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────
+   Two variants: primary (filled gradient) and ghost (outlined).
+   Both share the same padding and transition setup.
+   Two sizes: default and --sm. */
+
+/* Base — shared between both variants */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--duration-base) var(--ease-out-quart),
+    box-shadow var(--duration-base) var(--ease-out-quart),
+    background var(--duration-base) var(--ease-out-quart),
+    color var(--duration-base) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Shimmer layer — appears on hover via ::before */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform var(--duration-slow) var(--ease-out-quart);
+}
+
+.btn:hover::before {
+  transform: translateX(100%);
+}
+
+/* Primary — filled with gradient, glows on hover */
+.btn--primary {
+  background: var(--gradient-accent);
+  color: white;
+  box-shadow: 0 2px 12px var(--color-accent-glow);
+}
+
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px var(--color-accent-glow),
+              0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+/* Ghost — outlined, fills on hover */
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-border-hover);
+  transform: translateY(-2px);
+}
+
+/* Small size modifier */
+.btn--sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+}
+
+/* ── Tags ────────────────────────────────────────────────────
+   Technology/skill chips: .tag and .tag--sm.
+   Used in: project-card__tech, project-mini__tech,
+   skills__marquee (they're spans, not tag elements),
+   dsa__platforms, internship__regions. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+  transition:
+    background var(--duration-base) var(--ease-out-quart),
+    color var(--duration-base) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart);
+}
+
+.tag:hover {
+  background: var(--color-accent-dim);
+  color: var(--color-accent-light);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.tag--sm {
+  font-size: 0.65rem;
+  padding: 2px var(--space-2);
+}
+
+/* ── Skill bar ───────────────────────────────────────────────
+   Progress bar for each skill. Track + animated fill.
+   Fill width is set via data-width and animated by JS
+   (Intersection Observer adds .is-visible class). */
+.skills__bar {
+  width: 100%;
+  height: 3px;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.skills__bar-fill {
+  height: 100%;
+  width: 0%;   /* starts at 0 — JS animates to data-width value */
+  border-radius: var(--radius-full);
+  background: var(--gradient-accent);
+  transition: width 1s var(--ease-out-expo);
+  position: relative;
+}
+
+/* Animated shimmer on the bar fill */
+.skills__bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 100%;
+  background: rgba(255,255,255,0.5);
+  border-radius: var(--radius-full);
+  filter: blur(4px);
+}
+
+/* ── Project expand icon ─────────────────────────────────────
+   Chevron rotates when panel is open. */
+.project-card__expand-icon {
+  transition: transform var(--duration-base) var(--ease-out-quart);
+  flex-shrink: 0;
+}
+
+.project-card__expand[aria-expanded="true"] .project-card__expand-icon {
+  transform: rotate(180deg);
+}
+
+/* ── Timeline future badge ───────────────────────────────── */
+.timeline__future-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--color-accent-dim);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+/* ── Hero badge ──────────────────────────────────────────── */
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.18);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--color-success);
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: var(--space-6);
+}
+
+/* Pulsing green dot */
+.hero__badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--color-success);
+  animation: pulse-green 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-green {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+    opacity: 0.8;
+  }
+}
+
+/* ── Currently strip ─────────────────────────────────────── */
+.hero__currently {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.hero__currently-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* ── Social icon buttons ─────────────────────────────────── */
+.hero__socials {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.hero__social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  transition:
+    color var(--duration-base) var(--ease-out-quart),
+    background var(--duration-base) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart),
+    transform var(--duration-base) var(--ease-spring);
+}
+
+.hero__social:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-border-hover);
+  transform: translateY(-3px);
+}
+
+/* ── Scroll indicator ────────────────────────────────────── */
+.hero__scroll {
+  position: absolute;
+  bottom: var(--space-10);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  animation: float-up-down 3s ease-in-out infinite;
+}
+
+.hero__scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent),
+    transparent
+  );
+  animation: scroll-line 2s ease-in-out infinite;
+}
+
+@keyframes scroll-line {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  30%  { opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
+}
+
+@keyframes float-up-down {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
+}
+
+/* ── Floating chips on portrait ──────────────────────────── */
+.hero__chip {
+  position: absolute;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  background: rgba(8, 8, 8, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+}
+
+.hero__chip--1 {
+  top: 15%;
+  right: -20px;
+  animation: chip-float 4s ease-in-out infinite;
+}
+
+.hero__chip--2 {
+  top: 50%;
+  left: -28px;
+  animation: chip-float 5s ease-in-out infinite 0.8s;
+}
+
+.hero__chip--3 {
+  bottom: 20%;
+  right: -16px;
+  animation: chip-float 4.5s ease-in-out infinite 1.5s;
+}
+
+@keyframes chip-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}

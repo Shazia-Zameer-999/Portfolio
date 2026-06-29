@@ -1,0 +1,61 @@
+<section class="section skills" id="skills" aria-labelledby="skills-heading">
+  <div class="container">
+
+    <div class="section__header reveal-up">
+      <span class="section__eyebrow">Technical skills</span>
+      <h2 class="section__title" id="skills-heading">
+        What I work with.
+      </h2>
+      <p class="section__subtitle">
+        Proficiency isn't binary. Here's an honest picture.
+      </p>
+    </div>
+
+    <div class="skills__grid">
+      {% for category, skill_list in data.skills.items() %}
+      <div class="skills__category glass reveal-up" data-delay="{{ loop.index0 * 80 }}">
+        <h3 class="skills__category-title">{{ category }}</h3>
+        <ul class="skills__list" role="list">
+          {% for skill in skill_list %}
+          <li class="skills__item">
+            <div class="skills__item-header">
+              <span class="skills__item-name">{{ skill.name }}</span>
+              <span class="skills__item-level {{ skill.level | skill_color }}"
+                    aria-label="{{ skill.level }}% proficiency">
+                {% if skill.level >= 85 %}Expert
+                {% elif skill.level >= 70 %}Proficient
+                {% elif skill.level >= 55 %}Comfortable
+                {% else %}Learning
+                {% endif %}
+              </span>
+            </div>
+            <div class="skills__bar" role="progressbar"
+                 aria-valuenow="{{ skill.level }}"
+                 aria-valuemin="0" aria-valuemax="100"
+                 aria-label="{{ skill.name }}: {{ skill.level }}%">
+              <div class="skills__bar-fill" data-width="{{ skill.level }}"></div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+
+    {# Tech marquee — "Technologies I love" #}
+    <div class="skills__marquee reveal-fade" data-delay="400" aria-label="Technologies">
+      <div class="skills__marquee-track" aria-hidden="true">
+        {% set techs = ["Python", "Flask", "PostgreSQL", "Redis", "Docker",
+                        "Git", "Linux", "REST APIs", "JavaScript", "C++",
+                        "Nginx", "GCP", "Pandas", "SQLite", "Bash",
+                        "Python", "Flask", "PostgreSQL", "Redis", "Docker",
+                        "Git", "Linux", "REST APIs", "JavaScript", "C++",
+                        "Nginx", "GCP", "Pandas", "SQLite", "Bash"] %}
+        {% for tech in techs %}
+        <span class="skills__marquee-item">{{ tech }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</section>

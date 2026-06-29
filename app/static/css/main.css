@@ -1,0 +1,39 @@
+/* ============================================================
+   MAIN.CSS — ENTRY POINT
+   Imports every CSS file in the correct cascade order.
+   The base.html template also loads components.css,
+   animations.css, and sections.css directly — this file
+   satisfies the /static/css/main.css route and pulls in
+   everything that isn't loaded separately.
+
+   Load order matters:
+   1. Variables   — tokens everything else references
+   2. Reset       — browser normalisation
+   3. Typography  — text roles
+   4. Layout      — structure, container, nav, grids
+   5. Components  — reusable UI primitives
+   6. Hero        — hero-specific styles
+   7. Journey     — timeline + DSA + internship section styles
+   8. Projects    — project card styles
+   9. Animations  — keyframes + reveal classes
+   10. Responsive — breakpoints (always last)
+   ============================================================ */
+
+@import url('./variables.css');
+@import url('./reset.css');
+@import url('./typography.css');
+@import url('./layout.css');
+@import url('./components.css');
+@import url('./hero.css');
+@import url('./journey.css');
+@import url('./projects.css');
+@import url('./animations.css');
+@import url('./responsive.css');
+/* Hide native cursor everywhere */
+html,
+body,
+*,
+*::before,
+*::after {
+    cursor: none !important;
+}

@@ -1,0 +1,297 @@
+/* ============================================================
+   JOURNEY, DSA & INTERNSHIP SECTIONS
+   The emotional and technical core of the portfolio.
+   Timeline uses a left-spine layout with glass cards.
+   DSA uses an animated SVG donut ring.
+   ============================================================ */
+
+/* ── Journey: type-specific node colors ─────────────────────
+   Each timeline event type gets a distinct accent color
+   on its node dot. Subtle — not garish. */
+/* ==========================================================
+   TIMELINE LAYOUT
+   ========================================================== */
+
+.timeline {
+    position: relative;
+    max-width: 900px;
+    margin: 80px auto;
+    padding-left: 40px;
+}
+
+.timeline__item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    margin-bottom: 70px;
+}
+
+.timeline__connector {
+    position: absolute;
+    left: 23px;
+    top: 48px;
+    width: 2px;
+    height: calc(100% + 30px);
+    background: rgba(255,255,255,0.12);
+}
+
+.timeline__node {
+    position: relative;
+    width: 48px;
+    min-width: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.timeline__node-dot {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 2px solid var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #111;
+    z-index: 2;
+}
+
+.timeline__node-ring {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid rgba(99,102,241,.25);
+    top: -7px;
+    left: -6px;
+}
+
+.timeline__content {
+    flex: 1;
+    max-width: 700px;
+
+    padding: 24px 28px;
+
+    border-radius: 22px;
+
+    background: rgba(20,20,20,.65);
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    backdrop-filter: blur(12px);
+
+    transition: .35s;
+}
+
+.timeline__content:hover {
+
+    transform: translateY(-4px);
+
+    border-color: rgba(99,102,241,.35);
+
+    box-shadow: 0 20px 50px rgba(0,0,0,.35);
+
+}
+
+.timeline__year{
+
+    display:inline-block;
+
+    margin-bottom:12px;
+
+    color:var(--color-accent);
+
+    font-size:.85rem;
+
+    letter-spacing:.12em;
+
+    text-transform:uppercase;
+
+}
+
+.timeline__title{
+
+    font-size:1.45rem;
+
+    margin-bottom:14px;
+
+    color:white;
+
+}
+
+.timeline__desc{
+
+    color:#B5B5B5;
+
+    line-height:1.75;
+
+}
+.timeline__item--milestone .timeline__node-dot {
+  border-color: rgba(99, 102, 241, 0.4);
+  color: var(--color-accent);
+}
+
+.timeline__item--project .timeline__node-dot {
+  border-color: rgba(168, 85, 247, 0.4);
+  color: var(--color-accent-alt);
+}
+
+.timeline__item--work .timeline__node-dot {
+  border-color: rgba(34, 197, 94, 0.4);
+  color: var(--color-success);
+}
+
+.timeline__item--education .timeline__node-dot {
+  border-color: rgba(56, 189, 248, 0.4);
+  color: var(--color-info);
+}
+
+.timeline__item--learning .timeline__node-dot {
+  border-color: rgba(245, 158, 11, 0.4);
+  color: var(--color-warning);
+}
+
+.timeline__item--goal .timeline__node-dot {
+  border-color: rgba(99, 102, 241, 0.5);
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+}
+
+.timeline__item--future .timeline__node-dot {
+  border-color: var(--color-accent);
+  color: var(--color-accent-light);
+  background: var(--color-accent-dim);
+  box-shadow: 0 0 24px var(--color-accent-glow);
+}
+
+/* ── Timeline: alternating card colors ──────────────────────
+   Very subtle tint per type so each event feels distinct
+   without being visually noisy. */
+
+.timeline__item--work .timeline__content {
+  border-color: rgba(34, 197, 94, 0.1);
+}
+
+.timeline__item--education .timeline__content {
+  border-color: rgba(56, 189, 248, 0.1);
+}
+
+.timeline__item--future .timeline__content {
+  border-color: rgba(99, 102, 241, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.05) 0%,
+    rgba(8, 8, 8, 0.03) 100%
+  );
+}
+
+/* ── Timeline year accent ───────────────────────────────────
+   Year label color shifts with event type. */
+.timeline__item--work       .timeline__year { color: var(--color-success); }
+.timeline__item--education  .timeline__year { color: var(--color-info); }
+.timeline__item--learning   .timeline__year { color: var(--color-warning); }
+.timeline__item--future     .timeline__year { color: var(--color-accent-light); }
+.timeline__item--goal       .timeline__year { color: var(--color-accent); }
+
+/* ── DSA: SVG ring animation ────────────────────────────────
+   The three arcs animate their stroke-dasharray on page load.
+   JS adds .is-visible when section enters viewport.
+   We animate from 0 to the actual value set in HTML by Jinja. */
+
+.dsa__ring-easy,
+.dsa__ring-medium,
+.dsa__ring-hard {
+  stroke-dasharray: 0 314.16;  /* start at 0 */
+  transition: stroke-dasharray 1.2s var(--ease-out-expo);
+  transform-origin: center;
+}
+
+/* Each arc is offset so they appear sequentially on the ring.
+   stroke-dashoffset is set in JS based on the order. */
+.dsa__ring-easy {
+  transition-delay: 0.1s;
+}
+.dsa__ring-medium {
+  transition-delay: 0.3s;
+}
+.dsa__ring-hard {
+  transition-delay: 0.5s;
+}
+
+/* When JS adds is-visible to the parent section,
+   the inline stroke-dasharray in HTML (set by Jinja) takes effect. */
+.dsa.is-visible .dsa__ring-easy,
+.dsa.is-visible .dsa__ring-medium,
+.dsa.is-visible .dsa__ring-hard {
+  /* values are applied by JS: element.style.strokeDasharray = '...' */
+}
+
+/* ── DSA stats card — hover accent ─────────────────────────
+   Subtle left border accent on hover. */
+.dsa__stats-card {
+  border-left: 2px solid transparent;
+  transition:
+    border-color var(--duration-base) var(--ease-out-quart),
+    background var(--duration-base) var(--ease-out-quart);
+}
+
+.dsa__stats-card:hover {
+  border-left-color: var(--color-accent);
+}
+
+/* ── Internship: program card accent glow ───────────────────
+   Programs with "preparing" status get a soft indigo glow. */
+.internship__program:has(.internship__status--preparing) {
+  border-color: rgba(99, 102, 241, 0.15);
+}
+
+.internship__program:has(.internship__status--preparing):hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.08);
+}
+
+/* ── About stat cards — counter animation ───────────────────
+   Numbers count up from 0 via JS.
+   The transition is CSS so JS just needs to update the text. */
+.about__stat-card {
+  text-align: center;
+  cursor: default;
+}
+
+.about__stat-card:hover .about__stat-number {
+  letter-spacing: calc(var(--tracking-tight) - 0.01em);
+}
+@media (max-width:768px){
+
+.timeline{
+
+padding-left:0;
+
+}
+
+.timeline::before{
+
+left:24px;
+
+}
+
+.timeline__item{
+
+gap:20px;
+
+}
+
+.timeline__content{
+
+padding:20px;
+
+}
+
+.timeline__title{
+
+font-size:1.2rem;
+
+}
+
+}

@@ -1,0 +1,364 @@
+/* ============================================================
+   RESPONSIVE
+   Mobile-first breakpoints.
+   Breakpoints: 768px (tablet), 1024px (desktop).
+   Every grid collapses to single-column on mobile.
+   Touch targets meet 44px minimum.
+   ============================================================ */
+
+/* ── Tablet: ≤ 1024px ───────────────────────────────────────
+   Moderate adjustments: some grids go to 2-col. */
+@media (max-width: 1024px) {
+
+  /* Hero: stack vertically, portrait below text */
+  .hero__container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    text-align: center;
+    padding-top: calc(var(--nav-height) + var(--space-16));
+    padding-bottom: var(--space-16);
+    gap: var(--space-12);
+    justify-items: center;
+  }
+
+  .hero__text {
+    align-items: center;
+    order: 1;
+  }
+
+  .hero__portrait {
+    order: 2;
+  }
+
+  .hero__portrait-frame {
+    max-width: 280px;
+  }
+
+  .hero__name-main {
+    text-align: center;
+  }
+
+  .hero__statement {
+    text-align: center;
+    max-width: 60ch;
+  }
+
+  .hero__currently {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* About: stack to single column */
+  .about__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+
+  .about__stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+  }
+
+  .about__quote {
+    grid-column: 1 / -1;
+  }
+
+  /* Project cards: stack image above content */
+  .project-card__layout,
+  .project-card:nth-child(even) .project-card__layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 260px auto;
+    direction: ltr;
+  }
+
+  .project-card__visual {
+    border-radius: 0;
+  }
+
+  /* DSA: stack to single column */
+  .dsa__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  /* Internship: stack to single column */
+  .internship__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+  }
+
+  /* Nav: show hamburger, hide desktop links */
+  .nav__links {
+    display: none;
+  }
+
+  .nav__hamburger {
+    display: flex;
+  }
+
+  .nav__mobile {
+    display: block;
+  }
+
+  /* Timeline: keep single column but compress slightly */
+  .timeline {
+    max-width: 100%;
+  }
+
+}
+
+/* ── Mobile: ≤ 768px ────────────────────────────────────────
+   Full single-column layout. Touch-friendly spacing. */
+@media (max-width: 768px) {
+
+  /* Nav: ensure hamburger is visible */
+  .nav__actions .btn--ghost:not(.nav__hamburger ~ .btn--ghost) {
+    display: none;  /* hide Resume button on mobile — it's in the drawer */
+  }
+
+  /* Hero: tighten spacing on small screens */
+  .hero__container {
+    padding-top: calc(var(--nav-height) + var(--space-10));
+    gap: var(--space-8);
+  }
+
+  .hero__chip {
+    display: none;  /* too cramped on mobile */
+  }
+
+  .hero__scroll {
+    display: none;  /* not needed on mobile */
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .hero__actions .btn {
+    justify-content: center;
+    padding: var(--space-4) var(--space-6);
+  }
+
+  /* About stats: 2×2 grid */
+  .about__stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .about__values {
+    gap: var(--space-5);
+  }
+
+  /* Skills: single column */
+  .skills__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  /* Timeline: tighter spacing */
+  .timeline::before {
+    left: 16px;
+  }
+
+  .timeline__item {
+    grid-template-columns: 36px 1fr;
+    gap: var(--space-4);
+  }
+
+  .timeline__node-dot {
+    width: 28px;
+    height: 28px;
+  }
+
+  .timeline__content {
+    padding: var(--space-4) var(--space-5);
+  }
+
+  /* DSA ring: stack ring and legend vertically */
+  .dsa__ring-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+
+  /* Projects list: remove list bottom margin squeeze */
+  .projects__list {
+    gap: var(--space-6);
+  }
+
+  .project-card__layout {
+    grid-template-rows: 220px auto;
+  }
+
+  .project-card__content {
+    padding: var(--space-6);
+  }
+
+  /* Other projects: single column */
+  .projects__other-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Achievements: 2-col */
+  .achievements__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  /* Internship area items */
+  .internship__program-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  /* Footer: stack vertically */
+  .footer__inner {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-3);
+  }
+
+  /* Section padding: tighten on small screens */
+  .section {
+    padding-block: clamp(3rem, 8vw, 5rem);
+  }
+
+  /* Cursor: hide on touch devices */
+  .cursor {
+    display: none;
+  }
+
+}
+
+/* ── Small mobile: ≤ 480px ──────────────────────────────────
+   Extra tightening for small phones. */
+@media (max-width: 480px) {
+
+  :root {
+    --container-pad: 1rem;
+  }
+
+  .hero__name-main {
+    font-size: var(--text-5xl);
+  }
+
+  .hero__role {
+    font-size: var(--text-2xl);
+    justify-content: center;
+  }
+
+  .about__stats {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+  }
+
+  .about__stat-card {
+    padding: var(--space-4);
+  }
+
+  .about__stat-number {
+    font-size: var(--text-3xl);
+  }
+
+  /* Achievements: single column */
+  .achievements__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* DSA stats card: smaller padding */
+  .dsa__stats-card,
+  .dsa__topics-card {
+    padding: var(--space-5);
+  }
+
+  /* Timeline: minimal gaps */
+  .timeline__item {
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .timeline__node-dot {
+    width: 24px;
+    height: 24px;
+  }
+
+  .timeline__node-dot svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Nav mobile: smaller text */
+  .nav__mobile-link {
+    font-size: var(--text-2xl);
+  }
+
+}
+
+/* ── Hover only on pointer devices ──────────────────────────
+   Hover effects are disabled on touch to prevent stuck states.
+   Project card image scale and lift only apply on pointer devices. */
+@media (hover: none) {
+  .project-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+  }
+
+  .project-card:hover .project-card__image {
+    transform: none;
+  }
+
+  .project-card__links {
+    opacity: 1;
+    transform: none;
+  }
+
+  .achievement:hover {
+    transform: none;
+  }
+
+  .project-mini:hover {
+    transform: none;
+  }
+
+  .hero__social:hover {
+    transform: none;
+  }
+
+  .btn:hover {
+    transform: none;
+  }
+}
+
+/* ── Print ───────────────────────────────────────────────────
+   Minimal print styles — background stripped, text black. */
+@media print {
+  .nav,
+  .hero__orb,
+  .hero__grid,
+  .cursor,
+  .scroll-progress,
+  .hero__scroll {
+    display: none;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .glass {
+    border: 1px solid #ddd;
+    background: white;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .btn {
+    border: 1px solid #999;
+    color: black;
+    background: white;
+  }
+}

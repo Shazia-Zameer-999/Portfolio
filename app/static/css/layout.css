@@ -1,0 +1,821 @@
+/* ============================================================
+   LAYOUT
+   Container, section wrapper, shared grid patterns,
+   scroll progress bar, and footer.
+   Every measurement from the 8px grid in variables.css.
+   ============================================================ */
+
+/* ── Scroll progress bar ────────────────────────────────────
+   Thin accent line at the very top of the viewport.
+   Width is set by JS via style.width. */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--gradient-accent);
+  z-index: var(--z-cursor);  /* above everything */
+  pointer-events: none;
+  transition: width 80ms linear;
+}
+
+/* ── Container ──────────────────────────────────────────────
+   Single centred content column. Fluid padding via clamp()
+   so it never feels too cramped on mobile or too narrow on desktop. */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* ── Section wrapper ────────────────────────────────────────
+   All content sections use .section as the outermost wrapper.
+   Consistent vertical rhythm throughout the page. */
+.section {
+  padding-block: var(--section-pad-y);
+  position: relative;
+  overflow: hidden;  /* contains orbs and decorative elements */
+}
+
+/* Alternate sections get a very subtle background shift
+   to provide visual separation without hard lines. */
+.section:nth-of-type(even) {
+  background-color: var(--color-bg-elevated);
+}
+
+/* ── Section header ─────────────────────────────────────────
+   Eyebrow + title + optional subtitle block.
+   Centred by default; --left modifier for inline sections. */
+.section__header {
+  text-align: center;
+  margin-bottom: clamp(var(--space-12), 6vw, var(--space-20));
+}
+
+.section__header--left {
+  text-align: left;
+}
+
+/* ── Nav layout ─────────────────────────────────────────────
+   Fixed top bar. Uses backdrop-filter for the glass effect.
+   Height matches --nav-height token so content can offset correctly. */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  height: var(--nav-height);
+  background: rgba(8, 8, 8, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid transparent;
+  transition:
+    background var(--duration-slow) var(--ease-out-quart),
+    border-color var(--duration-slow) var(--ease-out-quart),
+    transform var(--duration-slow) var(--ease-out-quart);
+}
+
+/* Scrolled state — added by JS */
+.nav.is-scrolled {
+  background: rgba(8, 8, 8, 0.92);
+  border-color: var(--color-border);
+}
+
+/* Hidden state — nav slides up when scrolling down, JS handles this */
+.nav.is-hidden {
+  transform: translateY(-100%);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+  gap: var(--space-8);
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* ── Mobile nav ─────────────────────────────────────────────
+   Full-height drawer that slides in from the right.
+   Visibility toggled by JS via aria-hidden + is-open class. */
+.nav__mobile {
+  display: none;  /* shown only on mobile via responsive.css */
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg);
+  z-index: calc(var(--z-nav) - 1);
+  padding: calc(var(--nav-height) + var(--space-12)) var(--container-pad) var(--space-12);
+  transform: translateX(100%);
+  transition: transform var(--duration-slow) var(--ease-out-expo);
+}
+
+.nav__mobile.is-open {
+  transform: translateX(0);
+}
+
+.nav__mobile-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* Hamburger button — three lines */
+.nav__hamburger {
+  display: none;  /* shown only on mobile via responsive.css */
+  flex-direction: column;
+  gap: 5px;
+  width: 24px;
+  padding: 4px;
+}
+
+.nav__hamburger span {
+  display: block;
+  height: 1.5px;
+  width: 100%;
+  background: var(--color-text-primary);
+  border-radius: var(--radius-full);
+  transition:
+    transform var(--duration-slow) var(--ease-out-expo),
+    opacity var(--duration-base) var(--ease-out-quart);
+}
+
+/* Animate hamburger to X when open */
+.nav__hamburger.is-open span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.nav__hamburger.is-open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav__hamburger.is-open span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ── Main content offset ────────────────────────────────────
+   Push content below fixed nav. */
+#main-content {
+  padding-top: var(--nav-height);
+}
+
+/* The hero is full-viewport, so it accounts for nav height itself. */
+.hero {
+  padding-top: 0;
+  margin-top: calc(-1 * var(--nav-height));
+}
+
+/* ── Footer ─────────────────────────────────────────────────
+   Simple one-line footer. */
+.footer {
+  padding-block: var(--space-8);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.footer__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+/* ── About grid ─────────────────────────────────────────────
+   Two-column: story text (wider) + stat cards (narrower). */
+.about__grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: clamp(var(--space-12), 5vw, var(--space-20));
+  align-items: start;
+}
+
+/* ── About stats ────────────────────────────────────────────
+   Two-column 2×2 stat cards + quote below. */
+.about__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.about__stat-card {
+  padding: var(--space-5) var(--space-5);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Quote spans full width below the 4 cards */
+.about__quote {
+  grid-column: 1 / -1;
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border-left: 2px solid var(--color-accent);
+}
+
+/* ── About values ───────────────────────────────────────────
+   Three values stacked vertically. */
+.about__values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+}
+
+.about__value {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.about__value-icon {
+  font-size: var(--text-xl);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── Skills grid ────────────────────────────────────────────
+   Responsive auto-fit: 3 columns desktop, 2 tablet, 1 mobile. */
+.skills__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-12);
+}
+
+.skills__category {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+}
+
+.skills__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.skills__item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+/* ── Skills marquee container ───────────────────────────────
+   Overflow hidden so the track scrolls invisibly at edges. */
+.skills__marquee {
+  overflow: hidden;
+  padding-block: var(--space-6);
+  border-block: 1px solid var(--color-border);
+  position: relative;
+}
+
+/* Fade edges */
+.skills__marquee::before,
+.skills__marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.skills__marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg), transparent);
+}
+
+.skills__marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg), transparent);
+}
+
+.skills__marquee-track {
+  display: flex;
+  gap: var(--space-8);
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+/* ── Timeline layout ────────────────────────────────────────
+   Vertical list with centre spine on desktop. */
+.timeline {
+  position: relative;
+  max-width: 720px;
+  margin-inline: auto;
+  padding-block: var(--space-4);
+}
+
+/* Centre spine line */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-border) 10%,
+    var(--color-border) 90%,
+    transparent
+  );
+}
+
+.timeline__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.timeline__item:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Timeline node ──────────────────────────────────────────
+   The dot + ring on the spine. */
+.timeline__node {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: var(--space-4);
+  z-index: 1;
+}
+
+.timeline__node-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+  transition:
+    background var(--duration-base) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart),
+    box-shadow var(--duration-base) var(--ease-out-quart);
+}
+
+.timeline__item--future .timeline__node-dot {
+  background: var(--color-accent-dim);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 20px var(--color-accent-glow);
+}
+
+.timeline__node-ring {
+  position: absolute;
+  top: calc(var(--space-4) - 4px);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  transition:
+    border-color var(--duration-base) var(--ease-out-quart),
+    transform var(--duration-slow) var(--ease-out-quart);
+}
+
+.timeline__item:hover .timeline__node-ring {
+  border-color: var(--color-accent);
+  transform: scale(1.15);
+}
+
+/* ── Timeline content card ──────────────────────────────────
+   The glass card to the right of the node. */
+.timeline__content {
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  transition: transform var(--duration-slow) var(--ease-out-quart);
+}
+
+.timeline__item:hover .timeline__content {
+  transform: translateX(4px);
+}
+
+.timeline__future-badge {
+  margin-top: var(--space-3);
+  display: inline-flex;
+}
+
+/* ── Projects list ──────────────────────────────────────────
+   Full-width stack of project cards. */
+.projects__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin-bottom: var(--space-16);
+}
+
+.project-card {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition:
+    transform var(--duration-slow) var(--ease-out-quart),
+    box-shadow var(--duration-slow) var(--ease-out-quart);
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl), var(--shadow-accent);
+}
+
+/* Alternating layout: odd = image left, even = image right */
+.project-card__layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 380px;
+}
+
+.project-card:nth-child(even) .project-card__layout {
+  direction: rtl;
+}
+
+.project-card:nth-child(even) .project-card__layout > * {
+  direction: ltr;
+}
+
+.project-card__visual {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-subtle);
+}
+
+.project-card__image-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+.project-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slower) var(--ease-out-quart);
+}
+
+.project-card:hover .project-card__image {
+  transform: scale(1.04);
+}
+
+.project-card__image-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-accent-subtle);
+  font-size: var(--text-5xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+.project-card__links {
+  position: absolute;
+  bottom: var(--space-5);
+  left: var(--space-5);
+  display: flex;
+  gap: var(--space-3);
+  z-index: 2;
+}
+
+.project-card__content {
+  padding: clamp(var(--space-8), 4vw, var(--space-12));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.project-card__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+/* Case study panel */
+.project-card__case {
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  animation: slide-down var(--duration-slow) var(--ease-out-expo);
+}
+
+.case__section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Other projects grid ─────────────────────────────────── */
+.projects__other {
+  margin-top: var(--space-4);
+}
+
+.projects__other-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-5);
+}
+
+.project-mini {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--duration-slow) var(--ease-out-quart);
+}
+
+.project-mini:hover {
+  transform: translateY(-3px);
+}
+
+.project-mini__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  margin-top: auto;
+}
+
+/* ── DSA grid ───────────────────────────────────────────────
+   Two-column: stats on left, topics on right. */
+.dsa__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  margin-bottom: var(--space-20);
+}
+
+.dsa__stats-card,
+.dsa__topics-card {
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  height: 100%;
+}
+
+/* Donut ring + legend side by side */
+.dsa__ring-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-bottom: var(--space-6);
+}
+
+.dsa__ring {
+  flex-shrink: 0;
+  transform: rotate(-90deg);  /* start from top */
+}
+
+.dsa__legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.dsa__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dsa__legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.dsa__legend-dot--easy   { background: var(--color-easy); }
+.dsa__legend-dot--medium { background: var(--color-medium); }
+.dsa__legend-dot--hard   { background: var(--color-hard); }
+
+.dsa__platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.dsa__topics-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dsa__topic-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  transition:
+    background var(--duration-base) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart);
+}
+
+.dsa__topic-item:hover {
+  background: var(--color-accent-dim);
+  border-color: var(--color-accent);
+}
+
+/* ── Internship grid ────────────────────────────────────────
+   Two-column: programs + areas. */
+.internship {
+  margin-top: var(--space-20);
+}
+
+.internship__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(var(--space-10), 5vw, var(--space-16));
+}
+
+.internship__program-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.internship__program {
+  padding: var(--space-5) var(--space-5);
+  border-radius: var(--radius-lg);
+  transition: transform var(--duration-slow) var(--ease-out-quart);
+}
+
+.internship__program:hover {
+  transform: translateX(4px);
+}
+
+.internship__program-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.internship__area-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.internship__area-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.internship__regions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-6);
+}
+
+/* ── Achievements grid ──────────────────────────────────────
+   Responsive auto-fit: 4 → 2 → 1 columns. */
+.achievements__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-5);
+}
+
+.achievement {
+  padding: var(--space-7) var(--space-6);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition:
+    transform var(--duration-slow) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart);
+}
+
+.achievement:hover {
+  transform: translateY(-4px);
+}
+
+.achievement__icon {
+  color: var(--color-accent);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent-dim);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  transition: background var(--duration-base) var(--ease-out-quart);
+}
+
+.achievement:hover .achievement__icon {
+  background: var(--color-accent);
+  color: white;
+}
+
+/* ── Custom cursor ───────────────────────────────────────────
+   Follows mouse position set by JS via CSS vars. */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  mix-blend-mode: difference;
+}
+
+.cursor__dot {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  transition:
+    width var(--duration-fast) var(--ease-out-quart),
+    height var(--duration-fast) var(--ease-out-quart);
+}
+
+.cursor__ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  transition:
+    width var(--duration-slow) var(--ease-out-quart),
+    height var(--duration-slow) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart);
+}
+
+/* Cursor grows on hoverable elements */
+.cursor.is-hovering .cursor__ring {
+  width: 56px;
+  height: 56px;
+  border-color: rgba(255,255,255,0.6);
+}
+
+.cursor.is-hovering .cursor__dot {
+  width: 4px;
+  height: 4px;
+}
+
+/* DSA SVG ring colours */
+.dsa__ring-bg {
+  stroke: var(--color-bg-subtle);
+}
+
+.dsa__ring-easy {
+  stroke: var(--color-easy);
+  stroke-linecap: round;
+}
+
+.dsa__ring-medium {
+  stroke: var(--color-medium);
+  stroke-linecap: round;
+}
+
+.dsa__ring-hard {
+  stroke: var(--color-hard);
+  stroke-linecap: round;
+}

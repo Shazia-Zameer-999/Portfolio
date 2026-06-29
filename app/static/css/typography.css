@@ -1,0 +1,639 @@
+/* ============================================================
+   TYPOGRAPHY
+   Every text treatment in the site. Headings use tight tracking
+   and high weight. Body uses relaxed leading for readability.
+   Inter for everything — the standard for legibility at scale.
+   ============================================================ */
+
+/* ── Base body type ─────────────────────────────────────────
+   Already set on body in reset.css.
+   This section handles component-level text roles. */
+
+/* ── Display: hero name ─────────────────────────────────────
+   Large, cinematic. Tight letter-spacing at large sizes. */
+.hero__name-main {
+  font-size: clamp(var(--text-5xl), 8vw, var(--text-7xl));
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
+  display: block;
+}
+
+.hero__name-greeting {
+  display: block;
+  font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl));
+  font-weight: var(--weight-regular);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--tracking-normal);
+  margin-bottom: var(--space-2);
+}
+
+/* ── Section titles ─────────────────────────────────────────
+   Used across every section. Fluid size: readable on mobile,
+   impactful on desktop. */
+.section__title {
+  font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
+}
+
+/* ── Section eyebrow ────────────────────────────────────────
+   Small label above section headings — like Vercel's section tags.
+   Uppercase, wide tracking, accent color. */
+.section__eyebrow {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono);
+}
+
+/* ── Section subtitle ───────────────────────────────────────
+   Descriptive line under section title. */
+.section__subtitle {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  max-width: 52ch;
+  margin-top: var(--space-2);
+}
+
+/* ── Hero role line ─────────────────────────────────────────
+   "I build [typewriter]" */
+.hero__role {
+  font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Typewriter text — accent colored */
+.hero__typewriter {
+  color: var(--color-accent-light);
+  font-weight: var(--weight-semibold);
+}
+
+/* Blinking cursor after typewriter */
+.hero__cursor {
+  color: var(--color-accent);
+  font-weight: var(--weight-light);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Hero statement ─────────────────────────────────────────
+   One-paragraph pitch below the role line. */
+.hero__statement {
+  font-size: clamp(var(--text-base), 1.5vw, var(--text-lg));
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  max-width: 52ch;
+  margin-bottom: var(--space-6);
+}
+
+/* ── About paragraphs ───────────────────────────────────────
+   Story text — slightly larger than body default for readability. */
+.about__para {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+}
+
+.about__para:last-of-type {
+  margin-bottom: 0;
+}
+
+/* ── Stat numbers ───────────────────────────────────────────
+   Large animated counters in About. */
+.about__stat-number {
+  display: block;
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+
+  /* Gradient text */
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about__stat-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* ── Blockquote ─────────────────────────────────────────────
+   About section quote. */
+.about__quote p {
+  font-size: var(--text-base);
+  font-style: italic;
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-3);
+}
+
+.about__quote cite {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-style: normal;
+  font-family: var(--font-mono);
+}
+
+/* ── About values ───────────────────────────────────────────
+   Three value propositions. */
+.about__value strong {
+  display: block;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.about__value p {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* ── Skills ─────────────────────────────────────────────────
+   Category headings and item names. */
+.skills__category-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-mono);
+}
+
+.skills__item-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-primary);
+}
+
+.skills__item-level {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Skill level color variants (from Jinja filter) */
+.skill--expert    { color: var(--color-success); }
+.skill--proficient { color: var(--color-accent-light); }
+.skill--comfortable { color: var(--color-warning); }
+.skill--learning  { color: var(--color-text-muted); }
+
+/* Marquee items */
+.skills__marquee-item {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  white-space: nowrap;
+}
+
+/* ── Timeline ───────────────────────────────────────────────
+   Year labels, titles, descriptions. */
+.timeline__year {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+}
+
+.timeline__title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+  line-height: var(--leading-snug);
+}
+
+.timeline__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* ── Projects ───────────────────────────────────────────────
+   Project number, title, tagline, description. */
+.project-card__number {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wider);
+  margin-bottom: var(--space-3);
+  display: block;
+}
+
+.project-card__title {
+  font-size: clamp(var(--text-2xl), 3vw, var(--text-3xl));
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-2);
+}
+
+.project-card__tagline {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--color-accent-light);
+  margin-bottom: var(--space-3);
+  line-height: var(--leading-snug);
+}
+
+.project-card__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-5);
+}
+
+.case__heading {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.case__list li {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  padding-left: var(--space-4);
+  position: relative;
+  margin-bottom: var(--space-2);
+}
+
+.case__list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  top: 2px;
+}
+
+.project-mini__title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.project-mini__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-4);
+}
+
+/* ── DSA ────────────────────────────────────────────────────
+   Stats card, legend, topics. */
+.dsa__stats-title,
+.dsa__topics-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+  font-family: var(--font-mono);
+}
+
+.dsa__ring-total {
+  font-size: 22px;
+  font-weight: 600;
+  fill: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+.dsa__ring-label {
+  font-size: 10px;
+  fill: var(--color-text-muted);
+  font-family: var(--font-sans);
+}
+
+.dsa__legend-item {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.dsa__legend-item strong {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+}
+
+.dsa__topic-item {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.dsa__topic-icon {
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  margin-right: var(--space-2);
+}
+
+.dsa__topics-note {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+  line-height: var(--leading-relaxed);
+  margin-top: var(--space-5);
+  margin-bottom: 0;
+}
+
+.dsa__topics-note em {
+  color: var(--color-accent-light);
+  font-style: normal;
+  font-weight: var(--weight-medium);
+}
+
+/* ── Internship ─────────────────────────────────────────────
+   Program names, status labels, area items. */
+.internship__sub-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-mono);
+}
+
+.internship__program-name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.internship__program-notes {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: var(--space-2) 0 0;
+}
+
+.internship__status {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+}
+
+.internship__status--preparing {
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--color-accent-light);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.internship__status--researching {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.internship__status--considering {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.internship__area-item {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.internship__area-check {
+  color: var(--color-success);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-mono);
+  margin-right: var(--space-3);
+}
+
+.internship__regions-label {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* ── Achievements ───────────────────────────────────────────
+   Title and description. */
+.achievement__title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+  line-height: var(--leading-snug);
+}
+
+.achievement__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+}
+
+/* ── Nav ────────────────────────────────────────────────────
+   Nav links, logo, mobile. */
+.nav__link {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--tracking-normal);
+  transition: color var(--duration-base) var(--ease-out-quart);
+}
+
+.nav__link:hover,
+.nav__link.is-active {
+  color: var(--color-text-primary);
+}
+
+.nav__logo {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.nav__logo-bracket {
+  color: var(--color-accent);
+}
+
+.nav__logo-name {
+  color: var(--color-text-primary);
+  margin: 0 2px;
+}
+
+.nav__mobile-link {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: var(--tracking-tight);
+  transition: color var(--duration-base) var(--ease-out-quart);
+}
+
+.nav__mobile-link:hover {
+  color: var(--color-accent-light);
+}
+
+/* ── Footer ─────────────────────────────────────────────────
+   Copy and links. */
+.footer__copy {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.footer__links a {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  transition: color var(--duration-base) var(--ease-out-quart);
+}
+
+.footer__links a:hover {
+  color: var(--color-text-primary);
+}
+
+/* ── Project expand button ───────────────────────────────── */
+.project-card__expand {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-accent-light);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: color var(--duration-base) var(--ease-out-quart);
+  margin-top: var(--space-4);
+}
+
+.project-card__expand:hover {
+  color: var(--color-text-primary);
+}
+
+/* ── DSA streak ─────────────────────────────────────────────
+   Fire emoji + streak text. */
+.dsa__streak {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.dsa__streak span {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.dsa__streak strong {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+}
+
+/* ── Other projects title ───────────────────────────────────
+   "Other projects" sub-heading. */
+.projects__other-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+  font-family: var(--font-mono);
+}
+
+/* ── Mini project links ─────────────────────────────────────
+   Small inline links in other-projects cards. */
+.project-mini__links {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.project-mini__links a {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  transition: color var(--duration-base) var(--ease-out-quart);
+}
+
+.project-mini__links a:hover {
+  color: var(--color-accent-light);
+}
+
+/* ── Timeline future badge ───────────────────────────────── */
+.timeline__future-badge span {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  font-family: var(--font-mono);
+  color: var(--color-accent-light);
+}
+
+/* ── Hero currently strip ───────────────────────────────── */
+.hero__currently-label {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.hero__currently-items span {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,177 @@
+/* ============================================================
+   HERO SECTION
+   Full-viewport cinematic opening. The visual centrepiece.
+   Everything in this section is designed to create an
+   immediate, memorable first impression.
+   ============================================================ */
+
+/* ── Section container ──────────────────────────────────────
+   Full viewport height. The nav overlaps it (margin-top: -nav-height
+   from layout.css), so we compensate with padding. */
+.hero {
+  position: relative;
+  min-height: 100svh;   /* svh: safe viewport height on mobile (no address bar jump) */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--color-bg);
+  /* Override the nth-child alternating bg from layout.css */
+  background-color: var(--color-bg) !important;
+}
+
+/* ── Ambient dot grid ───────────────────────────────────────
+   Subtle dot grid background — like Vercel/Linear's hero.
+   Created purely with CSS gradients, no images. */
+.hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(
+    ellipse 80% 60% at 50% 50%,
+    black 30%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 80% 60% at 50% 50%,
+    black 30%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Gradient orbs ──────────────────────────────────────────
+   Two large blurred orbs — indigo and purple.
+   They create ambient depth without being distracting.
+   Positions are offset so they don't cancel each other out. */
+.hero__orb {
+  position: absolute;
+  border-radius: var(--radius-full);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orb-drift 12s ease-in-out infinite alternate;
+}
+
+.hero__orb--1 {
+  width: clamp(400px, 55vw, 800px);
+  height: clamp(300px, 40vw, 600px);
+  background: var(--gradient-hero-orb-1);
+  top: -10%;
+  right: -5%;
+  animation-delay: 0s;
+}
+
+.hero__orb--2 {
+  width: clamp(300px, 40vw, 600px);
+  height: clamp(250px, 35vw, 500px);
+  background: var(--gradient-hero-orb-2);
+  bottom: -10%;
+  left: -5%;
+  animation-delay: -6s;  /* offset so they move out of phase */
+}
+
+@keyframes orb-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(30px, -20px) scale(1.05); }
+  100% { transform: translate(-20px, 10px) scale(0.95); }
+}
+
+/* ── Two-column layout ──────────────────────────────────────
+   Left: text content (slightly wider)
+   Right: portrait (slightly narrower)
+   Content is above the orbs. */
+.hero__container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: clamp(var(--space-10), 6vw, var(--space-20));
+  align-items: center;
+  padding-top: calc(var(--nav-height) + var(--space-12));
+  padding-bottom: var(--space-16);
+  min-height: 100svh;
+}
+
+/* ── Text column ────────────────────────────────────────────
+   Stacked: badge → name → role → statement → currently → CTAs → socials */
+.hero__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ── CTA row ────────────────────────────────────────────────
+   Primary + Ghost button side by side. */
+.hero__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: 0;
+}
+
+/* ── Portrait column ────────────────────────────────────────
+   Frame with glow behind the image. */
+.hero__portrait {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero__portrait-frame {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+}
+
+/* Glow behind portrait — accent colored radial blur */
+.hero__portrait-glow {
+  position: absolute;
+  inset: -40px;
+  background: var(--gradient-glow);
+  border-radius: var(--radius-full);
+  filter: blur(40px);
+  opacity: 0.6;
+  z-index: 0;
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* Portrait image */
+.hero__portrait-img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xl);
+  display: block;
+}
+
+/* Placeholder monogram (when no image) */
+.hero__portrait-placeholder {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 4/5;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-border);
+  background: var(--gradient-accent-subtle);
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(var(--text-5xl), 8vw, 120px);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
