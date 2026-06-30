@@ -11,7 +11,9 @@
 /* ==========================================================
    TIMELINE LAYOUT
    ========================================================== */
-
+.timeline__node {
+    padding-top: 0;
+}
 .timeline {
     position: relative;
     max-width: 900px;
@@ -63,8 +65,8 @@
     height: 60px;
     border-radius: 50%;
     border: 1px solid rgba(99,102,241,.25);
-    top: -7px;
-    left: -6px;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
 }
 
 .timeline__content {
@@ -262,6 +264,17 @@
 .about__stat-card:hover .about__stat-number {
   letter-spacing: calc(var(--tracking-tight) - 0.01em);
 }
+.timeline {
+    position: relative;
+    max-width: 900px;
+    margin: 80px auto;
+    padding-left: 40px;
+}
+
+/* Add this rule to fix desktop alignment */
+.timeline::before {
+    left: 64px;
+}
 @media (max-width:768px){
 
 .timeline{
@@ -269,6 +282,7 @@
 padding-left:0;
 
 }
+
 
 .timeline::before{
 

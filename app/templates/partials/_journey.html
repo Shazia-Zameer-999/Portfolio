@@ -14,8 +14,8 @@
     <div class="timeline" id="timeline" role="list">
       {% for event in data.timeline %}
 <div class="timeline__item {{ event['type'] | timeline_class }} reveal-timeline"
-           data-index="{{ loop.index0 }}"
-           role="listitem">
+          data-index="{{ loop.index0 }}"
+          role="listitem">
 
         {# Connector line #}
         {% if not loop.last %}

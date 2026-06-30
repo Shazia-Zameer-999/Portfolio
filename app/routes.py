@@ -6,6 +6,9 @@ from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from functools import wraps
+import resend
+from email_validator import validate_email, EmailNotValidError
+
 
 from flask import (
     Blueprint,
@@ -20,7 +23,8 @@ from flask import (
 
 main = Blueprint("main", __name__)
 logger = logging.getLogger(__name__)
-
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+resend.api_key = RESEND_API_KEY
 # ─────────────────────────────────────────────────────────────────────────────
 # Simple in-memory rate limiter (no Redis dependency for a single-server portfolio)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -28,12 +32,13 @@ from collections import defaultdict
 import time
 
 _rate_limit_store = defaultdict(list)
-RATE_LIMIT_MAX = 5       # requests
+RATE_LIMIT_MAX = 5  # requests
 RATE_LIMIT_WINDOW = 3600  # seconds (1 hour)
 
 
 def rate_limit(f):
     """Decorator: max RATE_LIMIT_MAX calls per IP per RATE_LIMIT_WINDOW seconds."""
+
     @wraps(f)
     def decorated(*args, **kwargs):
         ip = request.headers.get("X-Forwarded-For", request.remote_addr)
@@ -44,13 +49,19 @@ def rate_limit(f):
         _rate_limit_store[ip] = [t for t in _rate_limit_store[ip] if t > window_start]
 
         if len(_rate_limit_store[ip]) >= RATE_LIMIT_MAX:
-            return jsonify({
-                "success": False,
-                "message": "Too many requests. Please wait before trying again.",
-            }), 429
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "message": "Too many requests. Please wait before trying again.",
+                    }
+                ),
+                429,
+            )
 
         _rate_limit_store[ip].append(now)
         return f(*args, **kwargs)
+
     return decorated
 
 
@@ -63,46 +74,84 @@ PORTFOLIO_DATA = {
     "projects": [
         {
             "id": "project-1",
-            "title": "Project Alpha",
-            "tagline": "A full-stack application that does X at scale",
+            "title": "BitLinks",
+            "tagline": "A full-stack URL shortener with custom aliases, dynamic redirects, and integrated contact workflow.",
             "description": (
-                "Describe the problem you solved, why it mattered, "
-                "and the engineering decisions that made it work."
+                "BitLinks is a modern full-stack URL shortening application built with "
+                "Next.js, MongoDB, and Resend. Users can generate memorable short links "
+                "using custom aliases, while the application validates duplicate aliases, "
+                "stores mappings in MongoDB Atlas, and performs dynamic server-side redirects. "
+                "The project also includes a secure contact form that persists messages to "
+                "MongoDB and sends email notifications through Resend, demonstrating "
+                "full-stack API development, database integration, and responsive UI design."
             ),
-            "tech": ["Python", "Flask", "PostgreSQL", "React", "Docker"],
+            "tech": [
+                "Next.js",
+                "React",
+                "JavaScript",
+                "MongoDB Atlas",
+                "Mongoose",
+                "Resend",
+                "Tailwind CSS",
+                "Framer Motion",
+                "Vercel",
+            ],
             "challenges": [
-                "Handling N concurrent users with < 200ms response time",
-                "Designing a schema that could evolve without downtime",
+                "Implementing dynamic routing for seamless short URL redirection using the Next.js App Router.",
+                "Preventing duplicate custom aliases while maintaining consistent database integrity.",
+                "Designing reusable API routes for URL generation, validation, storage, and email handling.",
+                "Integrating MongoDB Atlas and Resend into a secure server-side workflow.",
             ],
             "decisions": [
-                "Chose PostgreSQL over MongoDB for ACID guarantees",
-                "Used Redis for session caching to reduce DB load by 40%",
+                "Used MongoDB Atlas with Mongoose to efficiently store and query URL mappings.",
+                "Leveraged Next.js API Routes instead of a separate backend to simplify deployment and architecture.",
+                "Integrated Resend for reliable transactional email delivery from the contact form.",
+                "Deployed the application on Vercel for seamless CI/CD and production hosting.",
             ],
-            "image": "/static/assets/images/projects/project-1.jpg",
-            "live_url": "https://example.com",
-            "github_url": "https://github.com/yourusername/project-alpha",
+            "image": "/static/assets/images/projects/bitlinks.png",
+            "live_url": "https://bit-links-zeta.vercel.app",
+            "github_url": "https://github.com/Shazia-Zameer-999/BitLinks",
             "featured": True,
         },
         {
             "id": "project-2",
-            "title": "Project Beta",
-            "tagline": "An open-source tool that developers actually use",
+            "title": "Linktree Clone",
+            "tagline": "A full-stack link-in-bio platform with custom profiles, dynamic routing, and MongoDB persistence.",
             "description": (
-                "Built to scratch my own itch — a CLI tool that automates "
-                "something every backend developer does manually."
+                "Developed a full-stack Linktree-inspired web application that enables users "
+                "to create personalized public profile pages using unique handles. The platform "
+                "supports profile customization with bios, profile images, and multiple external "
+                "links while persisting user data in MongoDB. Built using the Next.js App Router, "
+                "the application includes secure server-side validation, dynamic routing, responsive "
+                "design, and modern animations to deliver a polished user experience."
             ),
-            "tech": ["Python", "Click", "SQLite", "GitHub Actions"],
+            "tech": [
+                "Next.js",
+                "React",
+                "JavaScript",
+                "MongoDB",
+                "Tailwind CSS",
+                "GSAP",
+                "Typed.js",
+                "React Toastify",
+                "React Icons",
+                "Vercel",
+            ],
             "challenges": [
-                "Cross-platform compatibility (Windows, macOS, Linux)",
-                "Zero-config setup for first-time users",
+                "Implementing dynamic public profile pages using unique handles with the Next.js App Router.",
+                "Preventing duplicate usernames while validating user input on the server.",
+                "Supporting both remote profile image URLs and local image uploads while maintaining input constraints.",
+                "Designing a responsive UI that provides a consistent experience across desktop and mobile devices.",
             ],
             "decisions": [
-                "Used Click over argparse for composable command trees",
-                "Shipped a single binary via PyInstaller",
+                "Used MongoDB to persist user profiles and link collections for scalable data storage.",
+                "Leveraged Next.js Route Handlers instead of a separate backend to simplify deployment and application architecture.",
+                "Implemented reusable server-side validation utilities to sanitize profile data before database insertion.",
+                "Integrated GSAP and Typed.js to enhance the landing page with smooth animations while keeping the builder experience lightweight.",
             ],
-            "image": "/static/assets/images/projects/project-2.jpg",
-            "live_url": None,
-            "github_url": "https://github.com/yourusername/project-beta",
+            "image": "/static/assets/images/projects/linktree-clone.png",
+            "live_url": "https://linktree-six-lime.vercel.app",  # replace with your deployed URL
+            "github_url": "https://github.com/Shazia-Zameer-999/Linktree",
             "featured": True,
         },
         {
@@ -128,107 +177,94 @@ PORTFOLIO_DATA = {
             "featured": False,
         },
     ],
-
     "timeline": [
         {
-            "year": "2021",
-            "title": "First Line of Code",
-            "description": "Wrote Hello World in Python. Didn't sleep for two days after.",
+            "year": "2023",
+            "title": "A Curious Beginning",
+            "description": "Started exploring programming with one simple question: ‘How does software actually work?’ That curiosity eventually became a habit.",
             "icon": "code",
             "type": "milestone",
         },
         {
-            "year": "2022",
-            "title": "Built First Real Project",
-            "description": "A web scraper that actually solved a problem. Realized software could do real things.",
+            "year": "2023",
+            "title": "Learning by Building",
+            "description": "Built small projects, broke them countless times, and slowly realized that debugging teaches more than tutorials ever can.",
             "icon": "rocket",
             "type": "project",
         },
         {
-            "year": "2022",
-            "title": "Started Freelancing",
-            "description": "First paid project. A small automation script for a local business. ₹3,000 and infinite confidence.",
+            "year": "2024",
+            "title": "First Freelance Clients",
+            "description": "Worked with real clients, delivered production projects, and learned what it means to write software that other people depend on.",
             "icon": "briefcase",
             "type": "work",
         },
         {
-            "year": "2023",
-            "title": "Enrolled in BTech",
-            "description": "Computer Science. Started taking algorithms seriously. Data Structures became a daily ritual.",
-            "icon": "graduation",
-            "type": "education",
-        },
-        {
-            "year": "2023",
-            "title": "Discovered Flask",
-            "description": "Built my first backend API. Understood how the web actually works under the hood.",
+            "year": "2025",
+            "title": "Choosing Flask Over Convenience",
+            "description": "Moved away from frameworks that hid too much behind abstractions. Chose Flask to understand authentication, routing, databases, sessions, and the web from the ground up.",
             "icon": "server",
             "type": "learning",
         },
         {
-            "year": "2024",
-            "title": "Serious DSA Grind",
-            "description": "300+ LeetCode problems. Not for the badge — to think in algorithms, not just code.",
+            "year": "2026",
+            "title": "Thinking Like an Engineer",
+            "description": "Started focusing on Data Structures & Algorithms—not to solve interview questions, but to learn how experienced engineers approach problems.",
             "icon": "chart",
-            "type": "milestone",
+            "type": "education",
         },
         {
-            "year": "2024",
-            "title": "Freelance Revenue Crossed ₹X Lakhs",
-            "description": "Multiple clients. Real production systems. Learned more from this than any course.",
+            "year": "2026",
+            "title": "Building with Purpose",
+            "description": "Every new project became an opportunity to learn architecture, deployment, scalability, and writing cleaner code instead of simply adding another repository.",
             "icon": "trending",
-            "type": "work",
+            "type": "project",
         },
         {
-            "year": "2025",
-            "title": "International Internship Prep Begins",
-            "description": "Researching IAESTE, Google STEP, Microsoft Explore. Preparing OA, system design, and behaviorals.",
+            "year": "Today",
+            "title": "Always Learning",
+            "description": "Currently building backend applications with Flask, improving problem-solving skills through DSA, and exploring system design one concept at a time.",
             "icon": "globe",
             "type": "goal",
         },
         {
-            "year": "2025 →",
-            "title": "The Goal",
-            "description": "An internship at a company that builds things at scale. Anywhere in the world.",
+            "year": "Next",
+            "title": "Building Software That Matters",
+            "description": "My goal isn’t just to work at a great company—it’s to become the kind of engineer who can build reliable systems that make a real difference.",
             "icon": "star",
             "type": "future",
         },
     ],
-
     "skills": {
         "Languages": [
-            {"name": "Python", "level": 90},
-            {"name": "JavaScript", "level": 75},
-            {"name": "C++", "level": 70},
+            {"name": "Python", "level": 92},
+            {"name": "JavaScript", "level": 78},
             {"name": "SQL", "level": 80},
-            {"name": "Bash", "level": 65},
         ],
         "Backend": [
-            {"name": "Flask", "level": 88},
-            {"name": "REST APIs", "level": 85},
-            {"name": "PostgreSQL", "level": 78},
-            {"name": "Redis", "level": 65},
-            {"name": "Docker", "level": 70},
+            {"name": "Flask", "level": 92},
+            {"name": "REST APIs", "level": 88},
+            {"name": "MongoDB", "level": 90},
+            {"name": "PostgreSQL", "level": 65},
         ],
         "Frontend": [
-            {"name": "HTML/CSS", "level": 82},
-            {"name": "Vanilla JS", "level": 75},
-            {"name": "React", "level": 60},
+            {"name": "HTML/CSS", "level": 85},
+            {"name": "Vanilla JavaScript", "level": 78},
+            {"name": "React", "level": 65},
+            {"name": "Jinja Templates", "level": 90},
         ],
         "Tools & Platforms": [
             {"name": "Git / GitHub", "level": 88},
-            {"name": "Linux", "level": 78},
-            {"name": "GCP", "level": 60},
-            {"name": "Nginx", "level": 65},
+            {"name": "Linux", "level": 75},
+            {"name": "Render", "level": 80},
+            {"name": "Vercel", "level": 82},
         ],
         "CS Fundamentals": [
-            {"name": "Data Structures", "level": 85},
-            {"name": "Algorithms", "level": 82},
-            {"name": "System Design", "level": 68},
-            {"name": "OOP", "level": 85},
+            {"name": "Data Structures", "level": 82},
+            {"name": "Algorithms", "level": 75},
+            {"name": "OOP", "level": 88},
         ],
     },
-
     "achievements": [
         {
             "title": "300+ LeetCode Problems",
@@ -251,23 +287,21 @@ PORTFOLIO_DATA = {
             "icon": "trophy",
         },
     ],
-
     "dsa_stats": {
-        "total_solved": 300,
-        "easy": 120,
-        "medium": 145,
-        "hard": 35,
-        "streak": 47,
+        "total_solved": 50,
+        "easy": 15,
+        "medium": 25,
+        "hard": 10,
+        "streak": 20,
         "platforms": ["LeetCode", "Codeforces", "HackerRank"],
         "favorite_topics": [
             "Dynamic Programming",
-            "Graph Algorithms",
+            "Linked Lists",
             "Binary Search",
             "Tree Traversal",
             "Sliding Window",
         ],
     },
-
     "internship_prep": {
         "programs": [
             {
@@ -300,12 +334,11 @@ PORTFOLIO_DATA = {
         ],
         "target_regions": ["USA", "Europe", "Singapore", "Remote"],
     },
-
     "currently": {
-        "reading": "Designing Data-Intensive Applications — Martin Kleppmann",
-        "building": "This portfolio",
-        "learning": "System Design fundamentals",
-        "open_to": "International internships for Summer 2026",
+        "reading": "Designing Data-Intensive Applications",
+        "building": "Full-stack web applications with Flask",
+        "learning": "Data Structures & Algorithms",
+        "open_to": "Backend & Full-Stack Internships",
     },
 }
 
@@ -313,6 +346,7 @@ PORTFOLIO_DATA = {
 # ─────────────────────────────────────────────────────────────────────────────
 # Context processor — injects site config into every template automatically
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @main.app_context_processor
 def inject_site_config():
@@ -335,6 +369,7 @@ def inject_site_config():
 # Main routes
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @main.route("/")
 def index():
     """Main portfolio page — the single page application shell."""
@@ -355,6 +390,7 @@ def resume():
 # Contact form API endpoint
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @main.route("/api/contact", methods=["POST"])
 @rate_limit
 def contact():
@@ -363,111 +399,117 @@ def contact():
     Returns JSON — the frontend handles display.
     Validates, sanitizes, then sends email via SMTP.
     """
-    data = request.get_json(silent=True)
 
+    data = request.get_json()
     if not data:
-        return jsonify({"success": False, "message": "Invalid request format."}), 400
 
-    # Validate fields
-    name = str(data.get("name", "")).strip()
-    email = str(data.get("email", "")).strip()
-    subject = str(data.get("subject", "")).strip()
-    message = str(data.get("message", "")).strip()
+        return (
+            jsonify(
+                {"success": False, "message": "Invalid request. JSON data is required."}
+            ),
+            400,
+        )
+    required_fields = ["name", "email", "subject", "message"]
+    for field in required_fields:
 
-    errors = {}
+        if field not in data:
 
-    if not name or len(name) < 2:
-        errors["name"] = "Name must be at least 2 characters."
-    if len(name) > 100:
-        errors["name"] = "Name is too long."
-
-    if not email or "@" not in email or "." not in email.split("@")[-1]:
-        errors["email"] = "Please enter a valid email address."
-    if len(email) > 200:
-        errors["email"] = "Email is too long."
-
-    if not subject or len(subject) < 3:
-        errors["subject"] = "Subject must be at least 3 characters."
-    if len(subject) > 200:
-        errors["subject"] = "Subject is too long."
-
-    if not message or len(message) < 10:
-        errors["message"] = "Message must be at least 10 characters."
-    if len(message) > 5000:
-        errors["message"] = "Message is too long (max 5000 characters)."
-
-    if errors:
-        return jsonify({"success": False, "errors": errors}), 422
-
-    # Send email
-    mail_username = current_app.config.get("MAIL_USERNAME")
-    mail_password = current_app.config.get("MAIL_PASSWORD")
-
-    if mail_username and mail_password:
-        try:
-            _send_email(
-                mail_username=mail_username,
-                mail_password=mail_password,
-                mail_server=current_app.config["MAIL_SERVER"],
-                mail_port=current_app.config["MAIL_PORT"],
-                to_email=mail_username,
-                from_name=name,
-                from_email=email,
-                subject=f"[Portfolio] {subject}",
-                message=message,
+            return (
+                jsonify(
+                    {"success": False, "message": f"{field.capitalize()} is missing."}
+                ),
+                400,
             )
-        except Exception as e:
-            logger.error(f"Failed to send contact email: {e}")
-            # Don't expose internal errors to the client
-            return jsonify({
-                "success": False,
-                "message": "Failed to send your message. Please email me directly.",
-            }), 500
-    else:
-        # Log in dev mode when email isn't configured
-        logger.info(
-            f"[DEV — no email configured] Contact from {name} <{email}>: {subject}"
+    name = data["name"].strip()
+
+    email = data["email"].strip()
+
+    subject = data["subject"].strip()
+
+    message = data["message"].strip()
+    if not name:
+        return jsonify({"success": False, "message": "Name cannot be empty."}), 400
+
+    if not email:
+        return jsonify({"success": False, "message": "Email cannot be empty."}), 400
+
+    if not subject:
+        return jsonify({"success": False, "message": "Subject cannot be empty."}), 400
+
+    if not message:
+        return jsonify({"success": False, "message": "Message cannot be empty."}), 400
+    if len(name) < 2 or len(name) > 100:
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "message": "Name must be between 2 and 100 characters.",
+                }
+            ),
+            400,
         )
 
-    return jsonify({
-        "success": True,
-        "message": "Message sent! I'll get back to you within 24 hours.",
-    })
+    if len(subject) > 150:
+        return (
+            jsonify(
+                {"success": False, "message": "Subject must not exceed 150 characters."}
+            ),
+            400,
+        )
 
+    if len(message) < 10:
+        return jsonify({"success": False, "message": "Message is too short."}), 400
 
-def _send_email(
-    mail_username, mail_password, mail_server, mail_port,
-    to_email, from_name, from_email, subject, message
-):
-    """Pure function: sends a plain-text email via SMTP TLS."""
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = mail_username
-    msg["To"] = to_email
-    msg["Reply-To"] = from_email
+    if len(message) > 3000:
+        return jsonify({"success": False, "message": "Message is too long."}), 400
 
-    body_text = f"From: {from_name} <{from_email}>\n\n{message}"
-    body_html = f"""
-    <html><body>
-    <p><strong>From:</strong> {from_name} &lt;{from_email}&gt;</p>
-    <hr>
-    <p>{message.replace(chr(10), '<br>')}</p>
-    </body></html>
-    """
+    try:
 
-    msg.attach(MIMEText(body_text, "plain"))
-    msg.attach(MIMEText(body_html, "html"))
+        valid = validate_email(email)
 
-    with smtplib.SMTP(mail_server, mail_port) as server:
-        server.ehlo()
-        server.starttls()
-        server.login(mail_username, mail_password)
-        server.sendmail(mail_username, to_email, msg.as_string())
+        email = valid.normalized
+
+    except EmailNotValidError:
+
+        return (
+            jsonify(
+                {"success": False, "message": "Please enter a valid email address."}
+            ),
+            400,
+        )
+    try:
+        resend.Emails.send(
+            {
+                "from": "Portfolio Contact <onboarding@resend.dev>",
+                "to": "shaziazameer7867@gmail.com",
+                "reply_to": email,
+                "subject": f"Portfolio Contact: {subject}",
+                "html": f"""
+            <h2>New Portfolio Contact</h2>
+
+            <p><strong>Name:</strong> {name}</p>
+
+            <p><strong>Email:</strong> {email}</p>
+
+            <p><strong>Subject:</strong> {subject}</p>
+
+            <p><strong>Message:</strong></p>
+
+            <p>{message}</p>
+        """,
+            }
+        )
+        return jsonify({"success": True, "message": "Email sent successfully."}), 200
+
+    except Exception as e:
+
+        return jsonify({"success": False, "message": str(e)}), 500
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SEO: Sitemap + Robots
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @main.route("/sitemap.xml")
 def sitemap():
@@ -484,14 +526,11 @@ def sitemap():
         {"loc": f"{base_url}/resume", "priority": "0.6", "changefreq": "monthly"},
     ]
 
-    xml_items = "\n".join([
-        f"""  <url>
+    xml_items = "\n".join([f"""  <url>
     <loc>{p['loc']}</loc>
     <priority>{p['priority']}</priority>
     <changefreq>{p['changefreq']}</changefreq>
-  </url>"""
-        for p in pages
-    ])
+  </url>""" for p in pages])
 
     sitemap_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -519,18 +558,22 @@ Disallow: /api/
 # Health check — useful for uptime monitors and deployment pipelines
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 @main.route("/health")
 def health():
-    return jsonify({
-        "status": "ok",
-        "timestamp": datetime.utcnow().isoformat(),
-        "version": "1.0.0",
-    })
+    return jsonify(
+        {
+            "status": "ok",
+            "timestamp": datetime.utcnow().isoformat(),
+            "version": "1.0.0",
+        }
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Error handlers
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 @main.app_errorhandler(404)
 def not_found(e):

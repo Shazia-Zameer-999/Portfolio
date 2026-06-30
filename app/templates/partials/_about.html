@@ -1,54 +1,71 @@
 <section class="section about" id="about" aria-labelledby="about-heading">
   <div class="container">
-
     <div class="section__header reveal-up">
       <span class="section__eyebrow">About me</span>
       <h2 class="section__title" id="about-heading">
-        I don't just write code.<br>I solve problems with it.
+        I don't just write code.<br />I solve problems with it.
       </h2>
     </div>
 
     <div class="about__grid">
-
       {# ── Story column ──────────────────────────────────────── #}
       <div class="about__story">
         <p class="about__para reveal-up" data-delay="0">
-          I started programming because I was curious about how software worked under the hood.
-          I stayed because I realized it's one of the few skills where you can build something
-          real — something that runs, that other people use — from scratch, alone, with just
-          a laptop and a problem worth solving.
+          I've always been curious about how things work beneath the surface.
+          Whether it's a web application, a browser rendering issue, or even
+          something outside software, I naturally find myself asking
+
+          <em>"Why does this work this way?"</em> That curiosity is what first
+          pulled me into programming, and it's still what keeps me excited about
+          engineering today.
         </p>
         <p class="about__para reveal-up" data-delay="100">
-          I'm currently a BTech Computer Science student, and while I take academics seriously,
-          most of what I've actually learned has come from building things: real freelance projects,
-          open source contributions, and the kind of bugs that teach you more than any textbook chapter.
+          I'm currently pursuing a B.Tech in Computer Science, but most of my
+          learning has come from building. From freelancing for clients to
+          developing personal projects, I've learned that real growth happens
+          when you leave tutorials behind, face unfamiliar problems, and
+          patiently work through them until they finally make sense.
         </p>
         <p class="about__para reveal-up" data-delay="200">
-          Right now I'm preparing for international internships — not just to get a stamp on my CV,
-          but because I want to work on systems at a scale I can't manufacture on my own.
-          I want to see how the best engineers think, and I want to be in the room where it happens.
+          I don't enjoy building projects just to add another line to my resume.
+          I enjoy creating things that solve real problems while teaching me
+          something new in the process. Every project, every bug, and every
+          challenge is another opportunity to think more deeply, write better
+          code, and become a better engineer than I was yesterday.
         </p>
 
         <div class="about__values reveal-up" data-delay="300">
           <div class="about__value">
             <span class="about__value-icon" aria-hidden="true">⚙️</span>
             <div>
-              <strong>Engineering first</strong>
-              <p>I care about correctness, performance, and maintainability — not just making it work.</p>
+              <strong>Curiosity First</strong>
+
+              <p>
+                I love understanding how things work before deciding how to
+                build them.
+              </p>
             </div>
           </div>
           <div class="about__value">
             <span class="about__value-icon" aria-hidden="true">🌍</span>
             <div>
-              <strong>Globally curious</strong>
-              <p>I'm preparing to work anywhere in the world. Different teams, different problems, different scale.</p>
+              <strong>Learn by Building</strong>
+
+              <p>
+                The best lessons come from real projects, debugging difficult
+                problems, and improving with every iteration.
+              </p>
             </div>
           </div>
           <div class="about__value">
             <span class="about__value-icon" aria-hidden="true">📐</span>
             <div>
-              <strong>Detail-obsessed</strong>
-              <p>The gap between good and great is almost always in the details other people skip.</p>
+              <strong>Always Growing</strong>
+
+              <p>
+                Every challenge is a chance to become a better engineer, one
+                small improvement at a time.
+              </p>
             </div>
           </div>
         </div>
@@ -57,29 +74,47 @@
       {# ── Stats column ──────────────────────────────────────── #}
       <div class="about__stats reveal-fade" data-delay="200">
         <div class="glass about__stat-card">
-          <span class="about__stat-number" data-count="{{ data.dsa_stats.total_solved }}">0</span>
+          <span
+            class="about__stat-number"
+            data-count="{{ data.dsa_stats.total_solved }}"
+            >0</span
+          >
           <span class="about__stat-label">DSA problems solved</span>
         </div>
         <div class="glass about__stat-card">
-          <span class="about__stat-number" data-count="{{ data.projects | length }}">0</span>
+          <span
+            class="about__stat-number"
+            data-count="{{ data.projects | length }}"
+            >0</span
+          >
           <span class="about__stat-label">Projects shipped</span>
         </div>
         <div class="glass about__stat-card">
-          <span class="about__stat-number" data-count="{{ data.dsa_stats.streak }}">0</span>
+          <span
+            class="about__stat-number"
+            data-count="{{ data.dsa_stats.streak }}"
+            >0</span
+          >
           <span class="about__stat-label">Day streak</span>
         </div>
         <div class="glass about__stat-card">
-          <span class="about__stat-number" data-count="{{ data.internship_prep.target_regions | length }}">0</span>
+          <span
+            class="about__stat-number"
+            data-count="{{ data.internship_prep.target_regions | length }}"
+            >0</span
+          >
           <span class="about__stat-label">Target regions</span>
         </div>
 
         {# Quote / philosophy #}
         <blockquote class="about__quote glass">
-          <p>"The best way to get a good idea is to have a lot of ideas and throw away the bad ones."</p>
+          <p>
+            "The best way to get a good idea is to have a lot of ideas and throw
+            away the bad ones."
+          </p>
           <cite>— Linus Pauling</cite>
         </blockquote>
       </div>
-
     </div>
   </div>
 </section>

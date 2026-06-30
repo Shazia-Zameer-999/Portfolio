@@ -9,13 +9,14 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 class BaseConfig:
     """Shared settings across all environments."""
     SECRET_KEY = os.environ.get("SECRET_KEY") or "dev-secret-change-in-production"
-    SITE_NAME = os.environ.get("SITE_NAME", "Your Name")
+    SITE_NAME = os.environ.get("SITE_NAME", "Shazia Zameer")
     SITE_TAGLINE = os.environ.get("SITE_TAGLINE", "Building software that matters.")
-    SITE_EMAIL = os.environ.get("SITE_EMAIL", "hello@yourname.dev")
-    SITE_GITHUB = os.environ.get("SITE_GITHUB", "https://github.com/yourusername")
-    SITE_LINKEDIN = os.environ.get("SITE_LINKEDIN", "https://linkedin.com/in/yourusername")
+    SITE_EMAIL = os.environ.get("SITE_EMAIL", "shaziazameer7867@gmail.com")
+    SITE_GITHUB = os.environ.get("SITE_GITHUB", "https://github.com/Shazia-Zameer-999" \
+    "")
+    SITE_LINKEDIN = os.environ.get("SITE_LINKEDIN", "https://www.linkedin.com/in/shazia-zameer-59b149308/")
     SITE_TWITTER = os.environ.get("SITE_TWITTER", "https://twitter.com/yourusername")
-    SITE_RESUME_URL = os.environ.get("SITE_RESUME_URL", "/static/assets/resume.pdf")
+    SITE_RESUME_URL = os.environ.get("SITE_RESUME_URL", "/static/assets/Shazia_Zameer.pdf")
 
     # Mail settings (for contact form)
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
