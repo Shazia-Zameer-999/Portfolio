@@ -150,7 +150,7 @@ PORTFOLIO_DATA = {
                 "Integrated GSAP and Typed.js to enhance the landing page with smooth animations while keeping the builder experience lightweight.",
             ],
             "image": "/static/assets/images/projects/linktree-clone.png",
-            "live_url": "https://linktree-six-lime.vercel.app",  # replace with your deployed URL
+            "live_url": "https://linktreeclone-eta.vercel.app/", 
             "github_url": "https://github.com/Shazia-Zameer-999/Linktree",
             "featured": True,
         },
