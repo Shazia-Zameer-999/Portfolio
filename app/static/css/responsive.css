@@ -9,7 +9,6 @@
 /* ── Tablet: ≤ 1024px ───────────────────────────────────────
    Moderate adjustments: some grids go to 2-col. */
 @media (max-width: 1024px) {
-
   /* Hero: stack vertically, portrait below text */
   .hero__container {
     grid-template-columns: 1fr;
@@ -93,7 +92,7 @@
     display: none;
   }
 
-  .nav__hamburger {
+  .menu-toggle {
     display: flex;
   }
 
@@ -105,16 +104,14 @@
   .timeline {
     max-width: 100%;
   }
-
 }
 
 /* ── Mobile: ≤ 768px ────────────────────────────────────────
    Full single-column layout. Touch-friendly spacing. */
 @media (max-width: 768px) {
-
-  /* Nav: ensure hamburger is visible */
-  .nav__actions .btn--ghost:not(.nav__hamburger ~ .btn--ghost) {
-    display: none;  /* hide Resume button on mobile — it's in the drawer */
+  /* Nav: hide desktop resume button; it lives in the drawer */
+  .nav__actions .btn--ghost {
+    display: none;
   }
 
   /* Hero: tighten spacing on small screens */
@@ -124,11 +121,11 @@
   }
 
   .hero__chip {
-    display: none;  /* too cramped on mobile */
+    display: none; /* too cramped on mobile */
   }
 
   .hero__scroll {
-    display: none;  /* not needed on mobile */
+    display: none; /* not needed on mobile */
   }
 
   .hero__actions {
@@ -230,13 +227,11 @@
   .cursor {
     display: none;
   }
-
 }
 
 /* ── Small mobile: ≤ 480px ──────────────────────────────────
    Extra tightening for small phones. */
 @media (max-width: 480px) {
-
   :root {
     --container-pad: 1rem;
   }
@@ -294,7 +289,6 @@
   .nav__mobile-link {
     font-size: var(--text-2xl);
   }
-
 }
 
 /* ── Hover only on pointer devices ──────────────────────────

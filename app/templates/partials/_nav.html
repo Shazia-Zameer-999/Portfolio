@@ -45,12 +45,18 @@
         class="menu-toggle"
         aria-label="Toggle navigation"
         aria-expanded="false"
+        aria-controls="navMobile"
+        type="button"
       ></button>
     </div>
   </div>
 
   {# Mobile drawer #}
   <div class="nav__mobile" id="navMobile" aria-hidden="true">
+    <div class="nav__mobile-header">
+      <span class="nav__mobile-label">Navigation</span>
+      <span class="nav__mobile-subtitle">Explore the site</span>
+    </div>
     <ul class="nav__mobile-links" role="list">
       <li><a href="#about" class="nav__mobile-link">About</a></li>
       <li><a href="#journey" class="nav__mobile-link">Journey</a></li>
