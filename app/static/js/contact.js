@@ -40,6 +40,7 @@ function initContactForm() {
     const form = document.getElementById('premium-contact-form');
     const terminal = document.getElementById('terminal-success');
     const terminalBody = document.getElementById('terminal-output');
+    const isMobileView = () => window.matchMedia('(max-width: 768px)').matches;
 
     if (!form || !terminal) return;
 
@@ -76,19 +77,25 @@ function initContactForm() {
             terminal.classList.remove("hidden");
 
             await runTerminalSequence(terminalBody);
-            await new Promise(resolve => {
 
-                function handler() {
+            if (isMobileView()) {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+            } else {
+                await new Promise(resolve => {
 
-                    document.removeEventListener("keydown", handler);
+                    function handler() {
 
-                    resolve();
+                        document.removeEventListener("keydown", handler);
 
-                }
+                        resolve();
 
-                document.addEventListener("keydown", handler);
+                    }
 
-            });
+                    document.addEventListener("keydown", handler);
+
+                });
+            }
+
             terminal.classList.add("hidden");
 
             form.reset();
@@ -116,13 +123,13 @@ async function runTerminalSequence(container) {
     const sequence = [
         { text: "sending...", prompt: "$", class: "term-text" },
 
-    { text: "Message delivered successfully.", prompt: "✓", class: "term-success" },
+        { text: "Message delivered successfully.", prompt: "✓", class: "term-success" },
 
-    { text: "Thanks for reaching out!", prompt: ">", class: "term-text" },
+        { text: "Thanks for reaching out!", prompt: ">", class: "term-text" },
 
-    { text: "I'll get back to you as soon as I can.", prompt: ">", class: "term-text" },
+        { text: "I'll get back to you as soon as I can.", prompt: ">", class: "term-text" },
 
-    { text: "Press any key to return to the contact form...", prompt: "$", class: "term-muted" }
+        { text: "Press any key to return to the contact form...", prompt: "$", class: "term-muted" }
     ];
 
     container.innerHTML = ''; // Clear container
