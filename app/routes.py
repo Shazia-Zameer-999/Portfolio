@@ -67,7 +67,6 @@ def rate_limit(f):
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Portfolio data — centralised here so Jinja gets it injected automatically.
-# Swap this with a DB or JSON file as your portfolio grows.
 # ─────────────────────────────────────────────────────────────────────────────
 
 PORTFOLIO_DATA = {
@@ -381,7 +380,7 @@ def resume():
     """Direct resume download / view."""
     resume_dir = os.path.join(current_app.static_folder, "assets")
     try:
-        return send_from_directory(resume_dir, "resume.pdf", as_attachment=False)
+        return send_from_directory(resume_dir, "Shazia_Zameer.pdf", as_attachment=False)
     except FileNotFoundError:
         abort(404)
 
@@ -514,10 +513,10 @@ def contact():
 @main.route("/sitemap.xml")
 def sitemap():
     """
-    Auto-generated XML sitemap.
-    Add your custom domain to SITE_URL in .env.
+    Generates a simple XML sitemap for SEO purposes.
+    This is a static sitemap based on the main portfolio sections.
     """
-    base_url = os.environ.get("SITE_URL", "https://yourname.dev")
+    base_url = os.environ.get("SITE_URL", "https://datendiva.me")
     pages = [
         {"loc": base_url, "priority": "1.0", "changefreq": "weekly"},
         {"loc": f"{base_url}/#about", "priority": "0.8", "changefreq": "monthly"},
@@ -546,7 +545,7 @@ def sitemap():
 def robots():
     robots_txt = f"""User-agent: *
 Allow: /
-Sitemap: {os.environ.get('SITE_URL', 'https://yourname.dev')}/sitemap.xml
+Sitemap: {os.environ.get('SITE_URL', 'https://datendiva.me')}/sitemap.xml
 Disallow: /api/
 """
     response = make_response(robots_txt)
