@@ -125,16 +125,18 @@
   position: relative;
   width: 100%;
   max-width: 380px;
+  overflow: visible !important; /* Add this ONLY if chips are still clipped */
 }
 
 /* Glow behind portrait — accent colored radial blur */
 .hero__portrait-glow {
   position: absolute;
-  inset: -40px;
-  background: var(--gradient-glow);
-  border-radius: var(--radius-full);
-  filter: blur(40px);
-  opacity: 0.6;
+  inset: -15px; /* Tighter inset so it hugs the frame */
+  /* Use a vibrant gradient matching the reference image */
+  background: linear-gradient(135deg, rgba(88,28,135,0.9), rgba(59,130,246,0.9));
+  border-radius: var(--radius-2xl); /* Match the image corners, not full circle */
+  filter: blur(35px); /* Slightly less blur for a more defined glow */
+  opacity: 0.75;
   z-index: 0;
   animation: glow-pulse 4s ease-in-out infinite;
 }
@@ -145,6 +147,7 @@
 }
 
 /* Portrait image */
+/* Portrait image */
 .hero__portrait-img {
   position: relative;
   z-index: 1;
@@ -153,11 +156,69 @@
   aspect-ratio: 4/5;
   object-fit: cover;
   border-radius: var(--radius-2xl);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-xl);
   display: block;
-}
+  
+  /* --- NEW CHANGES FOR NEON LOOK --- */
+  /* Remove the previous mask properties */
+  -webkit-mask-image: none;
+  mask-image: none;
 
+  /* Add the glowing neon rim */
+  border: 1px solid rgba(139, 92, 246, 0.6); /* Adjust color to match your specific purple */
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4), /* Outer glow */
+              inset 0 0 20px rgba(139, 92, 246, 0.2); /* Inner glow */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+}
+/* ── Floating Tech Chips ────────────────────────────────────
+   Ensures chips pop out over the image and frame */
+.hero__chip {
+  position: absolute;
+  z-index: 10;
+  
+  /* Dark glassmorphism effect */
+  background: rgba(15, 23, 42, 0.8); 
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* Layout and typography */
+  padding: 8px 16px;
+  border-radius: 9999px; /* Perfect pill shape */
+  font-size: 0.875rem;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero__orbital-lines {
+  position: absolute;
+  /* Expands the SVG canvas beyond the bounds of the frame */
+  top: -50px;
+  left: -50px;
+  width: calc(100% + 100px);
+  height: calc(100% + 100px);
+  z-index: 5; /* Ensures it sits behind the portrait image (z-index: 1) */
+  pointer-events: none; /* Prevents it from blocking clicks on the chips */
+}
+/* ── Ambient Terrain Overlay ──────────────────────────────── */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45vh; /* Covers the bottom portion of the screen */
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.8; 
+  
+  /* Blends the terrain into the background seamlessly */
+  background: 
+    linear-gradient(to bottom, var(--color-bg) 0%, transparent 40%),
+    url('/static/assets/images/terrain.png') center bottom / cover no-repeat;
+}
 /* Placeholder monogram (when no image) */
 .hero__portrait-placeholder {
   position: relative;

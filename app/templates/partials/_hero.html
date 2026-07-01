@@ -87,7 +87,27 @@
 
     {# ── Right: Portrait ──────────────────────────────────────── #}
     <div class="hero__portrait reveal-scale" data-delay="200">
-      <div class="hero__portrait-frame">
+     <div class="hero__portrait-frame">
+  <svg class="hero__orbital-lines" viewBox="0 0 400 500" aria-hidden="true" preserveAspectRatio="none">
+    <defs>
+      <filter id="node-glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    
+    <path d="M-50,200 Q150,50 450,180" fill="none" stroke="rgba(139, 92, 246, 0.3)" stroke-width="1.5" />
+    <path d="M-50,380 Q200,450 450,280" fill="none" stroke="rgba(139, 92, 246, 0.2)" stroke-width="1" />
+    
+    <circle cx="60" cy="135" r="2.5" fill="#a78bfa" filter="url(#node-glow)" />
+    <circle cx="340" cy="335" r="2.5" fill="#a78bfa" filter="url(#node-glow)" />
+  </svg>
+  
+  <div class="hero__portrait-glow" aria-hidden="true"></div>
+  </div>
         <div class="hero__portrait-glow" aria-hidden="true"></div>
         <img
           src="/static/assets/images/portrait.jpg"
