@@ -38,55 +38,37 @@
       >
         Resume ↗
       </a>
+
       {# Mobile hamburger #}
       <button
-        class="nav__hamburger"
-        id="navHamburger"
-        type="button"
-        aria-label="Toggle menu"
+        id="menuToggle"
+        class="menu-toggle"
+        aria-label="Toggle navigation"
         aria-expanded="false"
-        aria-controls="navMobile"
-      >
-        <span></span><span></span><span></span>
-      </button>
+      ></button>
     </div>
   </div>
 
   {# Mobile drawer #}
   <div class="nav__mobile" id="navMobile" aria-hidden="true">
-    <div class="nav__mobile-panel">
-      <div class="nav__mobile-header">
-        <span class="nav__mobile-label">Navigation</span>
-        <button
-          class="nav__mobile-close"
-          type="button"
-          aria-label="Close menu"
-          id="navMobileClose"
+    <ul class="nav__mobile-links" role="list">
+      <li><a href="#about" class="nav__mobile-link">About</a></li>
+      <li><a href="#journey" class="nav__mobile-link">Journey</a></li>
+      <li><a href="#skills" class="nav__mobile-link">Skills</a></li>
+      <li><a href="#projects" class="nav__mobile-link">Projects</a></li>
+      <li><a href="#dsa" class="nav__mobile-link">DSA</a></li>
+      <li><a href="#terminal" class="nav__mobile-link">Terminal</a></li>
+      <li><a href="#contact" class="nav__mobile-link">Contact</a></li>
+      <li>
+        <a
+          href="{{ site.resume_url }}"
+          target="_blank"
+          rel="noopener"
+          class="btn btn--primary btn--sm nav__mobile-cta"
         >
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-
-      <ul class="nav__mobile-links" role="list">
-        <li><a href="#about" class="nav__mobile-link">About</a></li>
-        <li><a href="#journey" class="nav__mobile-link">Journey</a></li>
-        <li><a href="#skills" class="nav__mobile-link">Skills</a></li>
-        <li><a href="#projects" class="nav__mobile-link">Projects</a></li>
-        <li><a href="#dsa" class="nav__mobile-link">DSA</a></li>
-        <li><a href="#terminal" class="nav__mobile-link">Terminal</a></li>
-        <li><a href="#contact" class="nav__mobile-link">Contact</a></li>
-        <li>
-          <a
-            href="{{ site.resume_url }}"
-            target="_blank"
-            rel="noopener"
-            class="btn btn--primary btn--sm nav__mobile-cta"
-          >
-            Download Resume
-          </a>
-        </li>
-      </ul>
-    </div>
+          Download Resume
+        </a>
+      </li>
+    </ul>
   </div>
 </nav>
