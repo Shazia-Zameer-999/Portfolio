@@ -516,7 +516,7 @@ def sitemap():
     Generates a simple XML sitemap for SEO purposes.
     This is a static sitemap based on the main portfolio sections.
     """
-    base_url = os.environ.get("SITE_URL", "https://datendiva.me")
+    base_url = os.environ.get("SITE_URL", "https://shaziazameer.dev")
     pages = [
         {"loc": base_url, "priority": "1.0", "changefreq": "weekly"},
         {"loc": f"{base_url}/#about", "priority": "0.8", "changefreq": "monthly"},
@@ -545,7 +545,7 @@ def sitemap():
 def robots():
     robots_txt = f"""User-agent: *
 Allow: /
-Sitemap: {os.environ.get('SITE_URL', 'https://datendiva.me')}/sitemap.xml
+Sitemap: {os.environ.get('SITE_URL', 'https://shaziazameer.dev')}/sitemap.xml
 Disallow: /api/
 """
     response = make_response(robots_txt)
