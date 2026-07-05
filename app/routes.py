@@ -149,7 +149,7 @@ PORTFOLIO_DATA = {
                 "Integrated GSAP and Typed.js to enhance the landing page with smooth animations while keeping the builder experience lightweight.",
             ],
             "image": "/static/assets/images/projects/linktree-clone.png",
-            "live_url": "https://linktree.datendiva.me", 
+            "live_url": "https://linktree.datendiva.me",
             "github_url": "https://github.com/Shazia-Zameer-999/Linktree",
             "featured": True,
         },
@@ -197,7 +197,53 @@ PORTFOLIO_DATA = {
             "github_url": "https://github.com/Shazia-Zameer-999/get-me-a-chai",
             "featured": True,
         },
+        {
+            "id": "project-4",
+            "title": "Headless Shopify Store",
+            "tagline": "A modern headless e-commerce storefront powered by Shopify, Sanity CMS, Next.js, and MongoDB with authentication, wishlist, and persistent carts.",
+            "description": (
+                "Headless Shopify Store is a full-stack e-commerce application built with "
+                "Next.js App Router, Shopify Storefront API, Sanity CMS, MongoDB, and NextAuth. "
+                "The application separates content management, commerce, and authentication into "
+                "independent services to deliver a fast, scalable shopping experience. Customers "
+                "can browse products, search the catalog, manage authenticated or guest carts, "
+                "maintain wishlists, securely sign in using multiple authentication providers, "
+                "view order history, and complete purchases through Shopify's hosted checkout. "
+                "Sanity powers dynamic homepage content while MongoDB persists user accounts, "
+                "wishlists, and cart synchronization for authenticated users."
+            ),
+            "tech": [
+                "Next.js",
+                "React",
+                "JavaScript",
+                "Shopify Storefront API",
+                "Shopify Admin API",
+                "NextAuth",
+                "MongoDB Atlas",
+                "Mongoose",
+                "Sanity CMS",
+                "Tailwind CSS",
+                "Framer Motion",
+                "Vercel",
             ],
+            "challenges": [
+                "Building a fully headless storefront while seamlessly integrating Shopify's Storefront and Admin APIs.",
+                "Synchronizing guest carts with authenticated user accounts using MongoDB without losing cart state.",
+                "Implementing secure authentication with Google, GitHub, and credentials using NextAuth.",
+                "Managing product search, wishlist persistence, order retrieval, and dynamic homepage content across multiple services.",
+            ],
+            "decisions": [
+                "Used the Shopify Storefront API for product catalog, search, cart operations, and checkout while leveraging the Admin API for customer order retrieval.",
+                "Integrated Sanity CMS to decouple marketing content from commerce, enabling independent content management.",
+                "Persisted authenticated carts and wishlists in MongoDB while maintaining cookie-based storage for guest users.",
+                "Deployed the storefront on Vercel and configured Shopify checkout on a dedicated subdomain for a scalable headless architecture.",
+            ],
+            "image": "/static/assets/images/projects/headless-shopify.png",
+            "live_url": "https://shop.datendiva.me",
+            "github_url": "https://github.com/Shazia-Zameer-999/shopify_demo",
+            "featured": True,
+        },
+    ],
     "timeline": [
         {
             "year": "2023",
