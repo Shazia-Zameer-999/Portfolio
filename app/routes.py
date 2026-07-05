@@ -155,27 +155,49 @@ PORTFOLIO_DATA = {
         },
         {
             "id": "project-3",
-            "title": "Project Gamma",
-            "tagline": "A data pipeline that processes X million records/day",
+            "title": "Get Me a Chai",
+            "tagline": "A full-stack creator funding platform with OAuth authentication, Razorpay payments, and personalized creator pages.",
             "description": (
-                "Built a real-time ETL pipeline for a freelance client, "
-                "replacing a brittle spreadsheet workflow."
+                "Get Me a Chai is a full-stack creator support platform built with "
+                "Next.js, MongoDB, NextAuth, and Razorpay. The application enables "
+                "creators to build personalized public pages where supporters can send "
+                "one-time payments through Razorpay Test Mode. It features OAuth "
+                "authentication, creator profile management, secure payment verification, "
+                "dynamic public routes, supporter history, and MongoDB-backed data "
+                "persistence, demonstrating modern full-stack architecture, authentication "
+                "workflows, payment gateway integration, and responsive UI development."
             ),
-            "tech": ["Python", "Pandas", "Airflow", "GCP", "BigQuery"],
+            "tech": [
+                "Next.js",
+                "React",
+                "JavaScript",
+                "MongoDB",
+                "Mongoose",
+                "NextAuth.js",
+                "Razorpay",
+                "Tailwind CSS",
+                "Framer Motion",
+                "React Toastify",
+                "Vercel",
+            ],
             "challenges": [
-                "Data quality: 30% of source records were malformed",
-                "Client's team had zero data engineering experience",
+                "Implementing secure OAuth authentication with multiple providers using NextAuth.js.",
+                "Integrating Razorpay Test Mode with server-side order creation and payment signature verification.",
+                "Managing dynamic creator pages while maintaining consistent supporter records after username changes.",
+                "Designing a responsive dashboard for profile management, payment settings, and live creator page updates.",
             ],
             "decisions": [
-                "Used Airflow DAGs for visibility and retry logic",
-                "Built a simple validation dashboard so the client could self-serve",
+                "Used Next.js App Router with Server Actions to simplify the full-stack architecture and reduce API boilerplate.",
+                "Stored creator profiles and payment records in MongoDB using Mongoose for efficient querying and data consistency.",
+                "Integrated NextAuth.js to provide secure OAuth authentication and session management across the application.",
+                "Implemented server-side Razorpay signature verification to ensure payment authenticity before updating transaction records.",
             ],
-            "image": "/static/assets/images/projects/project-3.jpg",
-            "live_url": None,
-            "github_url": "https://github.com/yourusername/project-gamma",
-            "featured": False,
+            "image": "/static/assets/images/projects/getmeachai.png",
+            "live_url": "https://get-me-a-chai-lake-kappa.vercel.app",
+            "github_url": "https://github.com/Shazia-Zameer-999/get-me-a-chai",
+            "featured": True,
         },
-    ],
+            ],
     "timeline": [
         {
             "year": "2023",
