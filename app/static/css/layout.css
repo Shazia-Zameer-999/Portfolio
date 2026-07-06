@@ -400,6 +400,25 @@ body.nav-open {
   margin-bottom: var(--space-2);
 }
 
+.skills__project-stack {
+  margin-bottom: var(--space-10);
+}
+
+.skills__project-stack-title {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.skills__project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
 /* ── Skills marquee container ───────────────────────────────
    Overflow hidden so the track scrolls invisibly at edges. */
 .skills__marquee {

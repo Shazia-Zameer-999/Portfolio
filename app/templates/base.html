@@ -1,113 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='assets/images/icon.svg') }}">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <head>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{{ url_for('static', filename='assets/images/icon.svg') }}"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  {# ── SEO ─────────────────────────────────────────────────────────── #}
-  <title>{% block title %}{{ site.name }} — Software Engineer{% endblock %}</title>
-  <meta name="description"
-        content="{% block description %}{{ site.name }} is a BTech software engineer building backend systems, APIs, and web applications. {{ site.tagline }}{% endblock %}" />
-  <meta name="keywords"
-        content="software engineer, flask, python, backend developer, portfolio, {{ site.name }}" />
-  <meta name="author" content="{{ site.name }}" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="{{ request.url }}" />
+    {# ── SEO ─────────────────────────────────────────────────────────── #}
+    <title>
+      {% block title %}{{ site.name }} — Software Engineer{% endblock %}
+    </title>
+    <meta
+      name="description"
+      content="{% block description %}{{ site.name }} is a BTech software engineer building backend systems, full-stack apps, and modern web experiences with Flask and Next.js. {{ site.tagline }}{% endblock %}"
+    />
+    <meta
+      name="keywords"
+      content="software engineer, flask, next.js, python, mongodb, backend developer, full-stack developer, portfolio, {{ site.name }}"
+    />
+    <meta name="author" content="{{ site.name }}" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="{{ request.url }}" />
 
-  {# ── Open Graph ───────────────────────────────────────────────────── #}
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="{{ site.name }} — Software Engineer" />
-  <meta property="og:description" content="{{ site.tagline }}" />
-  <meta property="og:url" content="{{ request.url }}" />
-  <meta property="og:image" content="/static/assets/images/og-image.jpg" />
+    {# ── Open Graph ───────────────────────────────────────────────────── #}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ site.name }} — Software Engineer" />
+    <meta property="og:description" content="{{ site.tagline }}" />
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:image" content="/static/assets/images/og-image.jpg" />
 
-  {# ── Twitter Card ─────────────────────────────────────────────────── #}
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{{ site.name }} — Software Engineer" />
-  <meta name="twitter:description" content="{{ site.tagline }}" />
-  <meta name="twitter:image" content="/static/assets/images/og-image.jpg" />
+    {# ── Twitter Card ─────────────────────────────────────────────────── #}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ site.name }} — Software Engineer" />
+    <meta name="twitter:description" content="{{ site.tagline }}" />
+    <meta name="twitter:image" content="/static/assets/images/og-image.jpg" />
 
-  {# ── Favicon ──────────────────────────────────────────────────────── #}
-  <link rel="icon" type="image/svg+xml" href="/static/assets/favicon.svg" />
+    {# ── Favicon ──────────────────────────────────────────────────────── #}
+    <link rel="icon" type="image/svg+xml" href="/static/assets/favicon.svg" />
 
-  {# ── Preload critical fonts ───────────────────────────────────────── #}
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    {# ── Preload critical fonts ───────────────────────────────────────── #}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
 
-  {# ── Styles ───────────────────────────────────────────────────────── #}
-  <link rel="stylesheet" href="/static/css/main.css" />
-  <link rel="stylesheet" href="/static/css/components.css" />
-  <link rel="stylesheet" href="/static/css/animations.css" />
-  <link rel="stylesheet" href="/static/css/sections.css" />
-  <link rel="stylesheet" href="/static/css/terminal.css" />
-  <link rel="stylesheet" href="/static/css/contact.css" />
+    {# ── Styles ───────────────────────────────────────────────────────── #}
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+    <link rel="stylesheet" href="/static/css/animations.css" />
+    <link rel="stylesheet" href="/static/css/sections.css" />
+    <link rel="stylesheet" href="/static/css/terminal.css" />
+    <link rel="stylesheet" href="/static/css/contact.css" />
 
-  {# ── JSON-LD structured data ──────────────────────────────────────── #}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "{{ site.name }}",
-    "url": "{{ request.host_url }}",
-    "sameAs": [
-      "{{ site.github }}",
-      "{{ site.linkedin }}"
-    ],
-    "jobTitle": "Software Engineer",
-    "description": "{{ site.tagline }}"
-  }
-  </script>
+    {# ── JSON-LD structured data ──────────────────────────────────────── #}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "{{ site.name }}",
+        "url": "{{ request.host_url }}",
+        "sameAs": ["{{ site.github }}", "{{ site.linkedin }}"],
+        "jobTitle": "Software Engineer",
+        "description": "{{ site.tagline }}"
+      }
+    </script>
 
-  {% block head_extra %}{% endblock %}
-</head>
-<body>
-  {# Custom cursor (desktop only) #}
-  <div class="cursor" id="cursor" aria-hidden="true">
-    <div class="cursor__dot"></div>
-    <div class="cursor__ring"></div>
-  </div>
+    {% block head_extra %}{% endblock %}
+  </head>
+  <body>
+    {# Custom cursor (desktop only) #}
+    <div class="cursor" id="cursor" aria-hidden="true">
+      <div class="cursor__dot"></div>
+      <div class="cursor__ring"></div>
+    </div>
 
-  {# Scroll progress bar #}
-  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    {# Scroll progress bar #}
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
-  {# Navigation #}
-  {% include "partials/_nav.html" %}
+    {# Navigation #} {% include "partials/_nav.html" %} {# Main content #}
+    <main id="main-content">{% block content %}{% endblock %}</main>
 
-  {# Main content #}
-  <main id="main-content">
-    {% block content %}{% endblock %}
-  </main>
-
-  {# Footer #}
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__inner">
-        <p class="footer__copy">
-          Built with Python + Flask &nbsp;·&nbsp; © {{ site.year }} {{ site.name }}
-        </p>
-        <div class="footer__links">
-          <a href="{{ site.github }}" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
-          <a href="{{ site.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
-          <a href="mailto:{{ site.email }}" aria-label="Email">Email</a>
+    {# Footer #}
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__inner">
+          <p class="footer__copy">
+            Built with Python + Flask + Next.js &nbsp;·&nbsp; © {{ site.year }}
+            {{ site.name }}
+          </p>
+          <div class="footer__links">
+            <a
+              href="{{ site.github }}"
+              target="_blank"
+              rel="noopener"
+              aria-label="GitHub"
+              >GitHub</a
+            >
+            <a
+              href="{{ site.linkedin }}"
+              target="_blank"
+              rel="noopener"
+              aria-label="LinkedIn"
+              >LinkedIn</a
+            >
+            <a href="mailto:{{ site.email }}" aria-label="Email">Email</a>
+          </div>
         </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  {# Scripts — deferred, non-blocking #}
-  <script src="/static/js/cursor.js" defer></script>
-  <script src="/static/js/nav.js" defer></script>
-  <script src="/static/js/animations.js" defer></script>
-  <script src="/static/js/typing.js" defer></script>
-  <script src="/static/js/timeline.js" defer></script>
-  <script src="/static/js/projects.js" defer></script>
-  <script src="/static/js/main.js" defer></script>
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-<script src="/static/js/stats.js" defer></script>
-<script src="/static/js/contact.js" defer></script>
-  {% block scripts_extra %}{% endblock %}
-</body>
+    {# Scripts — deferred, non-blocking #}
+    <script src="/static/js/cursor.js" defer></script>
+    <script src="/static/js/nav.js" defer></script>
+    <script src="/static/js/animations.js" defer></script>
+    <script src="/static/js/typing.js" defer></script>
+    <script src="/static/js/timeline.js" defer></script>
+    <script src="/static/js/projects.js" defer></script>
+    <script src="/static/js/main.js" defer></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="/static/js/stats.js" defer></script>
+    <script src="/static/js/contact.js" defer></script>
+    {% block scripts_extra %}{% endblock %}
+  </body>
 </html>

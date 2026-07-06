@@ -4,7 +4,7 @@
       <span class="section__eyebrow">Technical skills</span>
       <h2 class="section__title" id="skills-heading">What I work with.</h2>
       <p class="section__subtitle">
-        Proficiency isn't binary. Here's an honest picture.
+        Core strengths, modern full-stack tools, and technologies proven across my projects.
       </p>
     </div>
 
@@ -49,6 +49,15 @@
       {% endfor %}
     </div>
 
+    <div class="skills__project-stack reveal-up" data-delay="320">
+      <h3 class="skills__project-stack-title">Technologies used in my projects</h3>
+      <div class="skills__project-tags" aria-label="Technologies used across featured projects">
+        {% for tech in data.project_techs %}
+        <span class="tag">{{ tech }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
     {# Tech marquee — "Technologies I love" #}
     <div
       class="skills__marquee reveal-fade"
@@ -56,13 +65,7 @@
       aria-label="Technologies"
     >
       <div class="skills__marquee-track" aria-hidden="true">
-        {% set techs = ["Python", "Flask", "REST APIs", "MongoDB", "PostgreSQL",
-        "SQL", "Git", "GitHub", "Linux", "Jinja", "HTML", "CSS", "JavaScript",
-        "Render", "Vercel", "Authentication", "Sessions", "OAuth", "Responsive
-        Design", "Freelancing", "Python", "Flask", "REST APIs", "MongoDB",
-        "PostgreSQL", "SQL", "Git", "GitHub", "Linux", "Jinja", "HTML", "CSS",
-        "JavaScript", "Render", "Vercel", "Authentication", "Sessions", "OAuth",
-        "Responsive Design", "Freelancing"] %} {% for tech in techs %}
+        {% set techs = data.portfolio_techs + data.portfolio_techs %} {% for tech in techs %}
         <span class="skills__marquee-item">{{ tech }}</span>
         {% endfor %}
       </div>

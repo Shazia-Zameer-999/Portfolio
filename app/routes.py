@@ -243,6 +243,56 @@ PORTFOLIO_DATA = {
             "github_url": "https://github.com/Shazia-Zameer-999/shopify_demo",
             "featured": True,
         },
+        {
+            "id": "project-5",
+            "title": "ShazBlog",
+            "tagline": "A production-ready blogging platform with OAuth authentication, article publishing, and secure content management.",
+            "description": (
+                "ShazBlog is a full-stack publishing platform built with Flask, MongoDB, "
+                "and Bootstrap. Users can authenticate using local accounts or Google, "
+                "GitHub, LinkedIn, and Facebook OAuth, publish and manage articles, "
+                "upload cover images and profile avatars, participate in discussions "
+                "through authenticated comments, and manage personalized profiles. "
+                "The application stores uploaded media in MongoDB GridFS, implements "
+                "role-based authorization, CSRF protection, secure session handling, "
+                "search, category filtering, pagination, and a persistent contact system, "
+                "demonstrating production-ready backend architecture, authentication, "
+                "database design, and responsive user experience."
+            ),
+            "tech": [
+                "Flask",
+                "Python",
+                "MongoDB Atlas",
+                "PyMongo",
+                "GridFS",
+                "Jinja2",
+                "Bootstrap 5",
+                "JavaScript",
+                "OAuth 2.0",
+                "Google OAuth",
+                "GitHub OAuth",
+                "LinkedIn OAuth",
+                "Facebook OAuth",
+                "Gunicorn",
+                "Render",
+            ],
+            "challenges": [
+                "Implementing secure authentication with local login alongside multiple OAuth providers.",
+                "Designing role-based authorization to ensure users can only manage their own content.",
+                "Persisting uploaded images using MongoDB GridFS instead of the local filesystem for deployment compatibility.",
+                "Building scalable article management with search, category filters, pagination, and draft/publish workflows.",
+            ],
+            "decisions": [
+                "Used Flask with Jinja2 to create a lightweight, server-rendered architecture with minimal client-side complexity.",
+                "Stored application data and uploaded media in MongoDB Atlas using GridFS for persistent cloud storage.",
+                "Implemented OAuth authentication alongside traditional login to improve user accessibility and flexibility.",
+                "Applied CSRF protection, secure session management, validation, and ownership-based authorization to strengthen application security.",
+            ],
+            "image": "/static/assets/images/projects/shazblog.png",
+            "live_url": "https://shazblog.datendiva.me/",
+            "github_url": "https://github.com/Shazia-Zameer-999/flask-blog",
+            "featured": True,
+        },
     ],
     "timeline": [
         {
@@ -312,19 +362,35 @@ PORTFOLIO_DATA = {
             {"name": "Flask", "level": 92},
             {"name": "REST APIs", "level": 88},
             {"name": "MongoDB", "level": 90},
+            {"name": "Mongoose", "level": 78},
             {"name": "PostgreSQL", "level": 65},
         ],
         "Frontend": [
             {"name": "HTML/CSS", "level": 85},
             {"name": "Vanilla JavaScript", "level": 78},
-            {"name": "React", "level": 65},
+            {"name": "React", "level": 78},
+            {"name": "Next.js", "level": 78},
+            {"name": "Tailwind CSS", "level": 82},
             {"name": "Jinja Templates", "level": 90},
+        ],
+        "Project Stacks": [
+            {"name": "Next.js App Router", "level": 78},
+            {"name": "Server Actions", "level": 72},
+            {"name": "NextAuth.js", "level": 75},
+            {"name": "Shopify Storefront API", "level": 70},
+            {"name": "Shopify Admin API", "level": 65},
+            {"name": "Sanity CMS", "level": 68},
+            {"name": "Razorpay", "level": 66},
+            {"name": "Resend", "level": 72},
+            {"name": "Framer Motion", "level": 70},
+            {"name": "GSAP", "level": 68},
         ],
         "Tools & Platforms": [
             {"name": "Git / GitHub", "level": 88},
             {"name": "Linux", "level": 75},
             {"name": "Render", "level": 80},
             {"name": "Vercel", "level": 82},
+            {"name": "OAuth", "level": 75},
         ],
         "CS Fundamentals": [
             {"name": "Data Structures", "level": 82},
@@ -403,11 +469,33 @@ PORTFOLIO_DATA = {
     },
     "currently": {
         "reading": "Designing Data-Intensive Applications",
-        "building": "Full-stack web applications with Flask",
+        "building": "Full-stack web applications with Flask and Next.js",
         "learning": "Data Structures & Algorithms",
         "open_to": "Backend & Full-Stack Internships",
     },
 }
+
+
+def _unique_technologies(*technology_groups):
+    """Return technologies in display order without duplicate labels."""
+    return list(dict.fromkeys(tech for group in technology_groups for tech in group))
+
+
+# Keep portfolio-wide technology displays in sync with both the skills grid and
+# every project. Adding a technology to a future project automatically includes
+# it in the Skills section and technology marquee.
+PORTFOLIO_DATA["project_techs"] = _unique_technologies(
+    *(project["tech"] for project in PORTFOLIO_DATA["projects"])
+)
+PORTFOLIO_DATA["portfolio_techs"] = _unique_technologies(
+    *(
+        [skill["name"] for skill in skills]
+        for skills in PORTFOLIO_DATA["skills"].values()
+    )
+)
+PORTFOLIO_DATA["portfolio_techs"] = _unique_technologies(
+    PORTFOLIO_DATA["portfolio_techs"], PORTFOLIO_DATA["project_techs"]
+)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
