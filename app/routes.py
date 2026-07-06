@@ -635,7 +635,7 @@ def contact():
     try:
         resend.Emails.send(
             {
-                "from": "Portfolio Contact <onboarding@resend.dev>",
+                "from": "Shazia's Portfolio <onboarding@resend.dev>",
                 "to": "shaziazameer7867@gmail.com",
                 "reply_to": email,
                 "subject": f"Portfolio Contact: {subject}",
