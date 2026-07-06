@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Background: Matches the dark theme of the portfolio with a subtle border -->
+  <rect x="4" y="4" width="120" height="120" rx="24" fill="#11131C" stroke="#252836" stroke-width="2" />
+
+  <!-- Initial Text: Centered, bold '{s}' using standard system fonts for clean rendering -->
+  <text x="64" y="88" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="68" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="-2">{s}</text>
+
+  <!-- Status Indicator: The green dot from the hero section, anchored to the bottom right -->
+  <circle cx="104" cy="104" r="11" fill="#1DB954" />
+</svg>
