@@ -541,6 +541,52 @@ def resume():
         abort(404)
 
 
+import requests
+import json
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+
+def update_leetcode_stats_job():
+    url = "https://leetcode.com/graphql"
+    payload = "{\"query\":\"query userProblemsSolved($username: String!) {\\r\\n    allQuestionsCount {    \\r\\n        difficulty    \\r\\n        count  \\r\\n        }\\r\\n        matchedUser(username: $username) {\\r\\n            problemsSolvedBeatsStats { \\r\\n                difficulty\\r\\n                percentage    \\r\\n                }\\r\\n        submitStatsGlobal {\\r\\n            acSubmissionNum {        \\r\\n                difficulty        \\r\\n                count      \\r\\n                    }    \\r\\n                }  \\r\\n            }             \\r\\n        }\\r\\n\",\"variables\":{\"username\":\"shazia-zameer-999\"}}"
+    headers = {'Content-Type': 'application/json'}
+    
+    try:
+        # Note: GraphQL requests usually require POST rather than GET
+        response = requests.post(url, headers=headers, data=payload)
+        data = response.json()
+        
+        stats = data["data"]["matchedUser"]["submitStatsGlobal"]["acSubmissionNum"]
+        
+        # Update the PORTFOLIO_DATA dictionary
+        PORTFOLIO_DATA["dsa_stats"]["total_solved"] = stats[0]["count"]
+        PORTFOLIO_DATA["dsa_stats"]["easy"] = stats[1]["count"]
+        PORTFOLIO_DATA["dsa_stats"]["medium"] = stats[2]["count"]
+        PORTFOLIO_DATA["dsa_stats"]["hard"] = stats[3]["count"]
+        
+        print(f"Background Update: LeetCode stats synced! Total: {stats[0]['count']}")
+    except Exception as e:
+        print(f"Failed to update LeetCode stats in background: {e}")
+
+# 2. Set up the Background Scheduler
+scheduler = BackgroundScheduler()
+# Run the job every 15 minutes
+scheduler.add_job(func=update_leetcode_stats_job, trigger="interval", minutes=15)
+scheduler.start()
+
+# Ensure the scheduler shuts down properly when the Flask app exits
+atexit.register(lambda: scheduler.shutdown())
+
+# Optional: Run it once immediately upon server startup so it isn't empty for the first 15 mins
+update_leetcode_stats_job()
+
+@main.route("/api/leetcode-stats")
+def leetcode_stats():
+    # Because the background job updates PORTFOLIO_DATA automatically,
+    # this endpoint just serves the latest stored data instantly.
+    return PORTFOLIO_DATA["dsa_stats"]
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Contact form API endpoint
 # ─────────────────────────────────────────────────────────────────────────────
