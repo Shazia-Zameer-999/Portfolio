@@ -586,7 +586,18 @@ def leetcode_stats():
     # this endpoint just serves the latest stored data instantly.
     return PORTFOLIO_DATA["dsa_stats"]
 
+def leecode_streaks():
+    url="https://leetcode.com/graphql"
+    payload = "{\"query\":\"query \\r\\nuserProfileCalendar($username: String!, $year: Int) {\\r\\n    matchedUser(username: $username) {    \\r\\n        userCalendar(year: $year) {\\r\\n            activeYears\\r\\n            streak      \\r\\n            totalActiveDays      \\r\\n            dccBadges {        \\r\\n                timestamp        \\r\\n                badge {          \\r\\n                    name          \\r\\n                    icon\\r\\n                    }\\r\\n                }\\r\\n            submissionCalendar \\r\\n            }\\r\\n        }\\r\\n    } \",\"variables\":{\"username\":\"shazia-zameer-999\"}}"
+    headers = {
+    'Content-Type': 'application/json'
+    
+}
+    response = requests.request("GET", url, headers=headers, data=payload)
 
+    print(response.text)
+
+print(leecode_streaks())
 # ─────────────────────────────────────────────────────────────────────────────
 # Contact form API endpoint
 # ─────────────────────────────────────────────────────────────────────────────
