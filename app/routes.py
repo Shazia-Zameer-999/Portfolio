@@ -552,13 +552,11 @@ def update_leetcode_stats_job():
     headers = {'Content-Type': 'application/json'}
     
     try:
-        # Note: GraphQL requests usually require POST rather than GET
         response = requests.post(url, headers=headers, data=payload)
         data = response.json()
         
         stats = data["data"]["matchedUser"]["submitStatsGlobal"]["acSubmissionNum"]
         
-        # Update the PORTFOLIO_DATA dictionary
         PORTFOLIO_DATA["dsa_stats"]["total_solved"] = stats[0]["count"]
         PORTFOLIO_DATA["dsa_stats"]["easy"] = stats[1]["count"]
         PORTFOLIO_DATA["dsa_stats"]["medium"] = stats[2]["count"]
@@ -568,36 +566,120 @@ def update_leetcode_stats_job():
     except Exception as e:
         print(f"Failed to update LeetCode stats in background: {e}")
 
-# 2. Set up the Background Scheduler
 scheduler = BackgroundScheduler()
-# Run the job every 15 minutes
 scheduler.add_job(func=update_leetcode_stats_job, trigger="interval", minutes=15)
 scheduler.start()
 
-# Ensure the scheduler shuts down properly when the Flask app exits
 atexit.register(lambda: scheduler.shutdown())
 
-# Optional: Run it once immediately upon server startup so it isn't empty for the first 15 mins
 update_leetcode_stats_job()
 
 @main.route("/api/leetcode-stats")
 def leetcode_stats():
-    # Because the background job updates PORTFOLIO_DATA automatically,
-    # this endpoint just serves the latest stored data instantly.
+
     return PORTFOLIO_DATA["dsa_stats"]
+
 
 def leecode_streaks():
     url="https://leetcode.com/graphql"
     payload = "{\"query\":\"query \\r\\nuserProfileCalendar($username: String!, $year: Int) {\\r\\n    matchedUser(username: $username) {    \\r\\n        userCalendar(year: $year) {\\r\\n            activeYears\\r\\n            streak      \\r\\n            totalActiveDays      \\r\\n            dccBadges {        \\r\\n                timestamp        \\r\\n                badge {          \\r\\n                    name          \\r\\n                    icon\\r\\n                    }\\r\\n                }\\r\\n            submissionCalendar \\r\\n            }\\r\\n        }\\r\\n    } \",\"variables\":{\"username\":\"shazia-zameer-999\"}}"
     headers = {
     'Content-Type': 'application/json'
+    }
+    try:
+        response = requests.post(url, headers=headers, data=payload)
+        data = response.json()
+        
+        stats = data["data"]["matchedUser"]["userCalendar"]["streak"]
+        print(stats)
+        PORTFOLIO_DATA["dsa_stats"]["streak"] = stats
+        print(f"Background Update: LeetCode stats synced! Total: {stats}")
+    except Exception as e:
+        print(f"Failed to update LeetCode stats in background: {e}")
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=leecode_streaks, trigger="interval", minutes=15)
+scheduler.start()
+
+atexit.register(lambda: scheduler.shutdown())
+
+leecode_streaks()
+
+@main.route("/api/leetcode_streaks")
+def leetcode_stats2():
+    return PORTFOLIO_DATA["dsa_stats"]
+
+
+def get_top_leetcode_topics(username="shazia-zameer-999", top_n=5):
+    url = "https://leetcode.com/graphql"
     
-}
-    response = requests.request("GET", url, headers=headers, data=payload)
+    # The GraphQL query to fetch tag problem counts
+    payload = {
+        "query": """
+        query skillStats($username: String!) {
+            matchedUser(username: $username) {
+                tagProblemCounts {
+                    advanced {
+                        tagName
+                        problemsSolved
+                    }
+                    intermediate {
+                        tagName
+                        problemsSolved
+                    }
+                    fundamental {
+                        tagName
+                        problemsSolved
+                    }
+                }
+            }
+        }
+        """,
+        "variables": {
+            "username": username
+        }
+    }
+    
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        data = response.json()
+        
+        tag_counts = data.get("data", {}).get("matchedUser", {}).get("tagProblemCounts", {})
+        
+        if not tag_counts:
+            return {"error": "User data not found"}
+        
+        all_topics = (
+            tag_counts.get("advanced", []) + 
+            tag_counts.get("intermediate", []) + 
+            tag_counts.get("fundamental", [])
+        )
+        
+        sorted_topics = sorted(all_topics, key=lambda x: x["problemsSolved"], reverse=True)
 
-    print(response.text)
+        data=sorted_topics[:top_n]
+        topics_list=[]
+        for item in data:
+            topics_list.append(item['tagName'])
+        PORTFOLIO_DATA["dsa_stats"]["favorite_topics"] = topics_list
 
-print(leecode_streaks())
+        return sorted_topics[:top_n]
+        
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return []
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=get_top_leetcode_topics, trigger="interval", minutes=15)
+scheduler.start()
+
+atexit.register(lambda: scheduler.shutdown())
+get_top_leetcode_topics()
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Contact form API endpoint
 # ─────────────────────────────────────────────────────────────────────────────
