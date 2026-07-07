@@ -8,7 +8,10 @@ from email.mime.multipart import MIMEMultipart
 from functools import wraps
 import resend
 from email_validator import validate_email, EmailNotValidError
-
+import requests
+import json
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from flask import (
     Blueprint,
@@ -541,96 +544,28 @@ def resume():
         abort(404)
 
 
-import requests
-import json
-import atexit
-from apscheduler.schedulers.background import BackgroundScheduler
 
-def update_leetcode_stats_job():
-    url = "https://leetcode.com/graphql"
-    payload = "{\"query\":\"query userProblemsSolved($username: String!) {\\r\\n    allQuestionsCount {    \\r\\n        difficulty    \\r\\n        count  \\r\\n        }\\r\\n        matchedUser(username: $username) {\\r\\n            problemsSolvedBeatsStats { \\r\\n                difficulty\\r\\n                percentage    \\r\\n                }\\r\\n        submitStatsGlobal {\\r\\n            acSubmissionNum {        \\r\\n                difficulty        \\r\\n                count      \\r\\n                    }    \\r\\n                }  \\r\\n            }             \\r\\n        }\\r\\n\",\"variables\":{\"username\":\"shazia-zameer-999\"}}"
-    headers = {'Content-Type': 'application/json'}
-    
-    try:
-        response = requests.post(url, headers=headers, data=payload)
-        data = response.json()
-        
-        stats = data["data"]["matchedUser"]["submitStatsGlobal"]["acSubmissionNum"]
-        
-        PORTFOLIO_DATA["dsa_stats"]["total_solved"] = stats[0]["count"]
-        PORTFOLIO_DATA["dsa_stats"]["easy"] = stats[1]["count"]
-        PORTFOLIO_DATA["dsa_stats"]["medium"] = stats[2]["count"]
-        PORTFOLIO_DATA["dsa_stats"]["hard"] = stats[3]["count"]
-        
-        print(f"Background Update: LeetCode stats synced! Total: {stats[0]['count']}")
-    except Exception as e:
-        print(f"Failed to update LeetCode stats in background: {e}")
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=update_leetcode_stats_job, trigger="interval", minutes=15)
-scheduler.start()
-
-atexit.register(lambda: scheduler.shutdown())
-
-update_leetcode_stats_job()
-
-@main.route("/api/leetcode-stats")
-def leetcode_stats():
-
-    return PORTFOLIO_DATA["dsa_stats"]
-
-
-def leecode_streaks():
-    url="https://leetcode.com/graphql"
-    payload = "{\"query\":\"query \\r\\nuserProfileCalendar($username: String!, $year: Int) {\\r\\n    matchedUser(username: $username) {    \\r\\n        userCalendar(year: $year) {\\r\\n            activeYears\\r\\n            streak      \\r\\n            totalActiveDays      \\r\\n            dccBadges {        \\r\\n                timestamp        \\r\\n                badge {          \\r\\n                    name          \\r\\n                    icon\\r\\n                    }\\r\\n                }\\r\\n            submissionCalendar \\r\\n            }\\r\\n        }\\r\\n    } \",\"variables\":{\"username\":\"shazia-zameer-999\"}}"
-    headers = {
-    'Content-Type': 'application/json'
-    }
-    try:
-        response = requests.post(url, headers=headers, data=payload)
-        data = response.json()
-        
-        stats = data["data"]["matchedUser"]["userCalendar"]["streak"]
-        print(stats)
-        PORTFOLIO_DATA["dsa_stats"]["streak"] = stats
-        print(f"Background Update: LeetCode stats synced! Total: {stats}")
-    except Exception as e:
-        print(f"Failed to update LeetCode stats in background: {e}")
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=leecode_streaks, trigger="interval", minutes=15)
-scheduler.start()
-
-atexit.register(lambda: scheduler.shutdown())
-
-leecode_streaks()
-
-@main.route("/api/leetcode_streaks")
-def leetcode_stats2():
-    return PORTFOLIO_DATA["dsa_stats"]
-
-
-def get_top_leetcode_topics(username="shazia-zameer-999", top_n=5):
+def update_all_leetcode_stats(username="shazia-zameer-999", top_n=5):
     url = "https://leetcode.com/graphql"
     
-    # The GraphQL query to fetch tag problem counts
+    # 1. ONE combined GraphQL query asking for solved counts, streaks, and topics
     payload = {
         "query": """
-        query skillStats($username: String!) {
+        query getCombinedLeetCodeStats($username: String!) {
             matchedUser(username: $username) {
+                submitStatsGlobal {
+                    acSubmissionNum {
+                        difficulty
+                        count
+                    }
+                }
+                userCalendar {
+                    streak
+                }
                 tagProblemCounts {
-                    advanced {
-                        tagName
-                        problemsSolved
-                    }
-                    intermediate {
-                        tagName
-                        problemsSolved
-                    }
-                    fundamental {
-                        tagName
-                        problemsSolved
-                    }
+                    advanced { tagName problemsSolved }
+                    intermediate { tagName problemsSolved }
+                    fundamental { tagName problemsSolved }
                 }
             }
         }
@@ -640,45 +575,199 @@ def get_top_leetcode_topics(username="shazia-zameer-999", top_n=5):
         }
     }
     
-    headers = {
-        'Content-Type': 'application/json'
-    }
+    headers = {'Content-Type': 'application/json'}
     
     try:
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
         
-        tag_counts = data.get("data", {}).get("matchedUser", {}).get("tagProblemCounts", {})
+        # 2. Extract all the data from the single response
+        user_data = data.get("data", {}).get("matchedUser", {})
+        if not user_data:
+            print("User data not found")
+            return
+
+        stats = user_data.get("submitStatsGlobal", {}).get("acSubmissionNum", [])
+        streak = user_data.get("userCalendar", {}).get("streak", 0)
+        tag_counts = user_data.get("tagProblemCounts", {})
         
-        if not tag_counts:
-            return {"error": "User data not found"}
-        
+        # 3. Process the top topics
         all_topics = (
             tag_counts.get("advanced", []) + 
             tag_counts.get("intermediate", []) + 
             tag_counts.get("fundamental", [])
         )
-        
         sorted_topics = sorted(all_topics, key=lambda x: x["problemsSolved"], reverse=True)
-
-        data=sorted_topics[:top_n]
-        topics_list=[]
-        for item in data:
-            topics_list.append(item['tagName'])
-        PORTFOLIO_DATA["dsa_stats"]["favorite_topics"] = topics_list
-
-        return sorted_topics[:top_n]
+        top_topics_list = [item['tagName'] for item in sorted_topics[:top_n]]
         
-    except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
-        return []
+        # 4. Update the dictionary all at once
+        if len(stats) >= 4:
+            PORTFOLIO_DATA["dsa_stats"]["total_solved"] = stats[0]["count"]
+            PORTFOLIO_DATA["dsa_stats"]["easy"] = stats[1]["count"]
+            PORTFOLIO_DATA["dsa_stats"]["medium"] = stats[2]["count"]
+            PORTFOLIO_DATA["dsa_stats"]["hard"] = stats[3]["count"]
+            
+        PORTFOLIO_DATA["dsa_stats"]["streak"] = streak
+        PORTFOLIO_DATA["dsa_stats"]["favorite_topics"] = top_topics_list
+        
+        print(f"Background Update Success! Total: {stats[0]['count']}, Streak: {streak}")
+        
+    except Exception as e:
+        print(f"Failed to update LeetCode stats in background: {e}")
+
+
+# 5. Create ONLY ONE scheduler instance
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=get_top_leetcode_topics, trigger="interval", minutes=15)
+scheduler.add_job(func=update_all_leetcode_stats, trigger="interval", minutes=15)
 scheduler.start()
 
+# Shut down the scheduler cleanly on exit
 atexit.register(lambda: scheduler.shutdown())
-get_top_leetcode_topics()
+
+# Run it once immediately so the data is ready on startup
+update_all_leetcode_stats()
+
+
+# 6. Provide a single unified endpoint
+@main.route("/api/leetcode-stats")
+def leetcode_stats():
+    # Since both of your previous endpoints returned PORTFOLIO_DATA["dsa_stats"],
+    # you only need one route to serve everything to your frontend.
+    return PORTFOLIO_DATA["dsa_stats"]
+# def update_leetcode_stats_job():
+#     url = "https://leetcode.com/graphql"
+#     payload = "{\"query\":\"query userProblemsSolved($username: String!) {\\r\\n    allQuestionsCount {    \\r\\n        difficulty    \\r\\n        count  \\r\\n        }\\r\\n        matchedUser(username: $username) {\\r\\n            problemsSolvedBeatsStats { \\r\\n                difficulty\\r\\n                percentage    \\r\\n                }\\r\\n        submitStatsGlobal {\\r\\n            acSubmissionNum {        \\r\\n                difficulty        \\r\\n                count      \\r\\n                    }    \\r\\n                }  \\r\\n            }             \\r\\n        }\\r\\n\",\"variables\":{\"username\":\"shazia-zameer-999\"}}"
+#     headers = {'Content-Type': 'application/json'}
+    
+#     try:
+#         response = requests.post(url, headers=headers, data=payload)
+#         data = response.json()
+        
+#         stats = data["data"]["matchedUser"]["submitStatsGlobal"]["acSubmissionNum"]
+        
+#         PORTFOLIO_DATA["dsa_stats"]["total_solved"] = stats[0]["count"]
+#         PORTFOLIO_DATA["dsa_stats"]["easy"] = stats[1]["count"]
+#         PORTFOLIO_DATA["dsa_stats"]["medium"] = stats[2]["count"]
+#         PORTFOLIO_DATA["dsa_stats"]["hard"] = stats[3]["count"]
+        
+#         print(f"Background Update: LeetCode stats synced! Total: {stats[0]['count']}")
+#     except Exception as e:
+#         print(f"Failed to update LeetCode stats in background: {e}")
+
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=update_leetcode_stats_job, trigger="interval", minutes=15)
+# scheduler.start()
+
+# atexit.register(lambda: scheduler.shutdown())
+
+# update_leetcode_stats_job()
+
+# @main.route("/api/leetcode-stats")
+# def leetcode_stats():
+
+#     return PORTFOLIO_DATA["dsa_stats"]
+
+
+# def leecode_streaks():
+#     url="https://leetcode.com/graphql"
+#     payload = "{\"query\":\"query \\r\\nuserProfileCalendar($username: String!, $year: Int) {\\r\\n    matchedUser(username: $username) {    \\r\\n        userCalendar(year: $year) {\\r\\n            activeYears\\r\\n            streak      \\r\\n            totalActiveDays      \\r\\n            dccBadges {        \\r\\n                timestamp        \\r\\n                badge {          \\r\\n                    name          \\r\\n                    icon\\r\\n                    }\\r\\n                }\\r\\n            submissionCalendar \\r\\n            }\\r\\n        }\\r\\n    } \",\"variables\":{\"username\":\"shazia-zameer-999\"}}"
+#     headers = {
+#     'Content-Type': 'application/json'
+#     }
+#     try:
+#         response = requests.post(url, headers=headers, data=payload)
+#         data = response.json()
+        
+#         stats = data["data"]["matchedUser"]["userCalendar"]["streak"]
+#         print(stats)
+#         PORTFOLIO_DATA["dsa_stats"]["streak"] = stats
+#         print(f"Background Update: LeetCode stats synced! Total: {stats}")
+#     except Exception as e:
+#         print(f"Failed to update LeetCode stats in background: {e}")
+
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=leecode_streaks, trigger="interval", minutes=15)
+# scheduler.start()
+
+# atexit.register(lambda: scheduler.shutdown())
+
+# leecode_streaks()
+
+# @main.route("/api/leetcode_streaks")
+# def leetcode_stats2():
+#     return PORTFOLIO_DATA["dsa_stats"]
+
+
+# def get_top_leetcode_topics(username="shazia-zameer-999", top_n=5):
+#     url = "https://leetcode.com/graphql"
+    
+#     # The GraphQL query to fetch tag problem counts
+#     payload = {
+#         "query": """
+#         query skillStats($username: String!) {
+#             matchedUser(username: $username) {
+#                 tagProblemCounts {
+#                     advanced {
+#                         tagName
+#                         problemsSolved
+#                     }
+#                     intermediate {
+#                         tagName
+#                         problemsSolved
+#                     }
+#                     fundamental {
+#                         tagName
+#                         problemsSolved
+#                     }
+#                 }
+#             }
+#         }
+#         """,
+#         "variables": {
+#             "username": username
+#         }
+#     }
+    
+#     headers = {
+#         'Content-Type': 'application/json'
+#     }
+    
+#     try:
+#         response = requests.post(url, headers=headers, json=payload)
+#         response.raise_for_status()
+#         data = response.json()
+        
+#         tag_counts = data.get("data", {}).get("matchedUser", {}).get("tagProblemCounts", {})
+        
+#         if not tag_counts:
+#             return {"error": "User data not found"}
+        
+#         all_topics = (
+#             tag_counts.get("advanced", []) + 
+#             tag_counts.get("intermediate", []) + 
+#             tag_counts.get("fundamental", [])
+#         )
+        
+#         sorted_topics = sorted(all_topics, key=lambda x: x["problemsSolved"], reverse=True)
+
+#         data=sorted_topics[:top_n]
+#         topics_list=[]
+#         for item in data:
+#             topics_list.append(item['tagName'])
+#         PORTFOLIO_DATA["dsa_stats"]["favorite_topics"] = topics_list
+
+#         return sorted_topics[:top_n]
+        
+#     except requests.exceptions.RequestException as e:
+#         print(f"Request failed: {e}")
+#         return []
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=get_top_leetcode_topics, trigger="interval", minutes=15)
+# scheduler.start()
+
+# atexit.register(lambda: scheduler.shutdown())
+# get_top_leetcode_topics()
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Contact form API endpoint
