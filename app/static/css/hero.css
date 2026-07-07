@@ -105,9 +105,10 @@
 }
 
 /* ── CTA row ────────────────────────────────────────────────
-   Primary + Ghost button side by side. */
+   Primary and supporting buttons side by side. */
 .hero__actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-4);
   margin-bottom: 0;
