@@ -355,6 +355,52 @@ PORTFOLIO_DATA = {
             "type": "future",
         },
     ],
+    "freelancer": {
+        "profile_url": "https://www.freelancer.com/u/shaziaz17",
+        "rating": 5.0,
+        "review_count": 3,
+        # Verified from the public Freelancer profile. Keep this local fallback
+        # available even if a future API sync is unavailable.
+        "reviews": [
+            {
+                "reviewer": "Gary G.",
+                "country": "Canada",
+                "country_code": "CA",
+                "rating": 5.0,
+                "project": "Email Account Setup via SSH on VPS Linux Server",
+                "review": (
+                    "Shazia is very knowledgeable and professional worker. She "
+                    "completed the project very quickly and provided extra support "
+                    "that was needed. I would highly recommend her to anyone using "
+                    "freelancer.com. She is an asset to this website. Looking forward "
+                    "to working again in the future!"
+                ),
+                "date_label": "5 months ago",
+            },
+            {
+                "reviewer": "Siva S.",
+                "country": "India",
+                "country_code": "IN",
+                "rating": 5.0,
+                "project": "React Scrollytelling Timeline Component",
+                "review": "Awesome work!!! Delivered within time.",
+                "date_label": "7 months ago",
+            },
+            {
+                "reviewer": "Maria M.",
+                "country": "Austria",
+                "country_code": "AT",
+                "rating": 5.0,
+                "project": "Solve Undergraduate Math Problems Mathematica -- 2",
+                "review": (
+                    "She’s the sweetest person ever, highly recommend to work with! "
+                    "I had many questions and she answered them all, my project was a "
+                    "pretty long request and it only took about 2 hours, no regrets at all! <3"
+                ),
+                "date_label": "7 months ago",
+            },
+        ],
+    },
     "skills": {
         "Languages": [
             {"name": "Python", "level": 92},

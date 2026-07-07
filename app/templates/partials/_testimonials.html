@@ -1,0 +1,48 @@
+<section class="section testimonials" id="testimonials" aria-labelledby="testimonials-heading">
+  <div class="container">
+    <div class="section__header reveal-up">
+      <span class="section__eyebrow">Client feedback</span>
+      <h2 class="section__title" id="testimonials-heading">Trusted by clients.</h2>
+      <p class="section__subtitle">
+        Verified feedback from projects completed through Freelancer.
+      </p>
+    </div>
+
+    <div class="testimonials__summary reveal-up" data-delay="100">
+      <div class="testimonials__score" aria-label="{{ data.freelancer.rating }} out of 5 stars">
+        <strong>{{ "%.1f" | format(data.freelancer.rating) }}</strong>
+        <span class="testimonials__stars" aria-hidden="true">★★★★★</span>
+      </div>
+      <span>{{ data.freelancer.review_count }} verified reviews</span>
+    </div>
+
+    <div class="testimonials__grid">
+      {% for review in data.freelancer.reviews %}
+      <article class="testimonial glass reveal-up" data-delay="{{ loop.index0 * 100 }}">
+        <header class="testimonial__header">
+          <span class="testimonial__avatar" aria-hidden="true">{{ review.reviewer[0] }}</span>
+          <div>
+            <h3 class="testimonial__name">{{ review.reviewer }}</h3>
+            <p class="testimonial__country">{{ review.country_code }} · {{ review.country }}</p>
+          </div>
+          <span class="testimonial__date">{{ review.date_label }}</span>
+        </header>
+
+        <div class="testimonial__rating" aria-label="{{ review.rating }} out of 5 stars">
+          <span aria-hidden="true">★★★★★</span>
+          <span>{{ "%.1f" | format(review.rating) }}</span>
+        </div>
+        <p class="testimonial__project">{{ review.project }}</p>
+        <blockquote class="testimonial__quote">“{{ review.review }}”</blockquote>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="testimonials__cta reveal-up">
+      <a class="btn btn--ghost" href="{{ data.freelancer.profile_url }}" target="_blank" rel="noopener noreferrer">
+        View verified Freelancer profile
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
