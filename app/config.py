@@ -16,7 +16,7 @@ class BaseConfig:
     "")
     SITE_LINKEDIN = os.environ.get("SITE_LINKEDIN", "https://www.linkedin.com/in/shazia-zameer-59b149308/")
     SITE_TWITTER = os.environ.get("SITE_TWITTER", "https://twitter.com/yourusername")
-    SITE_RESUME_URL = os.environ.get("SITE_RESUME_URL", "/static/assets/Shazia_Zameer.pdf")
+    SITE_RESUME_URL = os.environ.get("SITE_RESUME_URL", "/static/assets/Shazia_Zameer_resume.pdf")
 
     # Mail settings (for contact form)
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
